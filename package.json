@@ -5,6 +5,7 @@
   "author": "xingyu",
   "private": false,
   "scripts": {
+    "run:dev": "npm run dev",
     "i": "pnpm install",
     "dev": "vite --mode env.local",
     "dev-server": "vite --mode dev",

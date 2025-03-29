@@ -15,6 +15,7 @@ export const authorize = (
   checkedScopes: string[],
   uncheckedScopes: string[]
 ) => {
+  // const tenantId = localStorage.getItem('tenant-id') || '1'; // 默认租户 ID
   // 构建 scopes
   const scopes = {}
   for (const scope of checkedScopes) {
@@ -27,6 +28,7 @@ export const authorize = (
   return request.post({
     url: '/system/oauth2/authorize',
     headers: {
+      // 'tenant-id': tenantId,
       'Content-Type': 'application/x-www-form-urlencoded'
     },
     params: {
