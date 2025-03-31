@@ -114,8 +114,8 @@ export default {
     small: '小'
   },
   login: {
-    welcome: '欢迎使用本系统',
-    message: '运维平台管理系统',
+    welcome: 'Hello,欢迎使用本系统',
+    message: '运维管理平台',
     tenantname: '租户名称',
     username: '用户名',
     password: '密码',

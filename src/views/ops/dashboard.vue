@@ -7,6 +7,7 @@
       width="100%"
       height="100%"
       style="min-height: 800px;"
+      sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
     ></iframe>
     <div v-else>加载中...</div>
   </div>
@@ -15,73 +16,32 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import * as OAuth2Api from '@/api/login/oauth2';
+import {getAccessToken} from "@/utils/auth";
+import request from '@/config/axios'
 
 const grafanaUrl = ref('');
 const router = useRouter();
 const formLoading = ref(false);
+const userToken  = getAccessToken()
 
-// OAuth2 参数，redirect_uri 使用后端代理地址
 const queryParams = {
   responseType: 'code',
   clientId: '1074019084204507136',
-  redirectUri: 'http://172.31.0.7:3000/login/generic_oauth', // 后端代理 Grafana 回调
+  redirectUri: 'http://172.31.0.6/grafana/login/generic_oauth',
   state: Math.random().toString(36).substring(2),
   scopes: ['user.read'],
 };
 
 onMounted(async () => {
-  try {
-    const query = router.currentRoute.value.query;
-    if (query.code) {
-      // 如果有 code，说明已授权完成，直接加载 Grafana
-      grafanaUrl.value = 'http://172.31.0.7:3000';
-    } else {
-      // 未授权，自动触发授权，并获取 redirectUrl 赋值给 grafanaUrl.value
-      const redirectUrl = await handleAuthorize(true);
-      if (redirectUrl) {
-        grafanaUrl.value = redirectUrl;
-      }
-    }
-  } catch (error) {
-    console.error('OAuth2 认证失败', error);
-  }
+  // console.log("userToken", userToken)
+  // grafanaUrl.value = await handleAuthorize(true);
+  // grafanaUrl.value = "http://172.31.0.6/grafana/login/generic_oauth";
+  const userToken = getAccessToken();
+  const response = await request.get({url: `/grafana-proxy/sso?token=${userToken}` });
+  grafanaUrl.value = "http://172.31.0.6/grafana";
 });
 
-// 复用授权逻辑
-const handleAuthorize = async (approved) => {
-  formLoading.value = true;
-  try {
-    const checkedScopes = approved ? queryParams.scopes : [];
-    const uncheckedScopes = approved ? [] : queryParams.scopes;
 
-    console.log("开始调用 doAuthorize");
-
-    const response = await doAuthorize(false, checkedScopes, uncheckedScopes);
-    console.log("doAuthorize 返回的结果：", response);
-    return response;
-  } catch (error) {
-    console.error('授权失败', error);
-  } finally {
-    formLoading.value = false;
-  }
-  return null;
-};
-
-
-
-// 调用授权 API
-const doAuthorize = (autoApprove, checkedScopes, uncheckedScopes) => {
-  return OAuth2Api.authorize(
-    queryParams.responseType,
-    queryParams.clientId,
-    queryParams.redirectUri,
-    queryParams.state,
-    autoApprove,
-    checkedScopes,
-    uncheckedScopes
-  );
-};
 </script>
 
 <style scoped>
