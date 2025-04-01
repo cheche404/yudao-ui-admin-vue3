@@ -16,7 +16,7 @@
       <el-form-item label="操作系统" prop="osType">
         <el-select v-model="formData.osType" clearable placeholder="请选择操作系统">
           <el-option
-            v-for="dict in getIntDictOptions(DICT_TYPE.HOST_OS_TYPE)"
+            v-for="dict in getIntDictOptions(DICT_TYPE.CMDB_HOST_OS)"
             :key="dict.value"
             :label="dict.label"
             :value="dict.value"
@@ -87,7 +87,12 @@ const formData = ref({
   sshUsername: 'root',
   sshPassword: '',
   status: CommonStatusEnum.ENABLE,
-  remark: ''
+  remark: '',
+  createTime: undefined,
+  updateTime: undefined,
+  creator: '',
+  updater: '',
+  deleted: false
 })
 const formRules = reactive({
   hostname: [{ required: true, message: '主机名称不能为空', trigger: 'blur' }],
@@ -160,7 +165,12 @@ const resetForm = () => {
     sshUsername: 'root',
     sshPassword: '',
     status: CommonStatusEnum.ENABLE,
-    remark: ''
+    remark: '',
+    createTime: undefined,
+    updateTime: undefined,
+    creator: '',
+    updater: '',
+    deleted: false
   } as any
   formRef.value?.resetFields()
 }

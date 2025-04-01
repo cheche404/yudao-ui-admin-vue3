@@ -53,7 +53,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['system:host:create']"
+          v-hasPermi="['cmdb:host:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -62,7 +62,7 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['system:host:export']"
+          v-hasPermi="['cmdb:host:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
@@ -78,7 +78,7 @@
       <el-table-column label="IP地址" align="center" prop="ipAddress" />
       <el-table-column label="操作系统" align="center" prop="osType">
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.HOST_OS_TYPE" :value="scope.row.osType" />
+          <dict-tag :type="DICT_TYPE.CMDB_HOST_OS" :value="scope.row.osType" />
         </template>
       </el-table-column>
       <el-table-column label="CPU核数" align="center" prop="cpuCores" />
@@ -96,13 +96,22 @@
         width="180"
         :formatter="dateFormatter"
       />
+      <el-table-column
+        label="更新时间"
+        align="center"
+        prop="updateTime"
+        width="180"
+        :formatter="dateFormatter"
+      />
+      <el-table-column label="创建者" align="center" prop="creator" />
+      <el-table-column label="更新者" align="center" prop="updater" />
       <el-table-column label="操作" align="center">
         <template #default="scope">
           <el-button
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['system:host:update']"
+            v-hasPermi="['cmdb:host:update']"
           >
             编辑
           </el-button>
@@ -110,7 +119,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['system:host:delete']"
+            v-hasPermi="['cmdb:host:delete']"
           >
             删除
           </el-button>
