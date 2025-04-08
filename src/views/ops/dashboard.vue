@@ -36,9 +36,9 @@ onMounted(async () => {
   // console.log("userToken", userToken)
   // grafanaUrl.value = await handleAuthorize(true);
   // grafanaUrl.value = "http://172.31.0.6/grafana/login/generic_oauth";
-  const userToken = getAccessToken();
-  const response = await request.get({url: `/grafana-proxy/sso?token=${userToken}` });
-  grafanaUrl.value = "http://172.31.0.6/grafana";
+  // const userToken = getAccessToken();
+  // const response = await request.get({url: `/grafana-proxy/sso?token=${userToken}` });
+  grafanaUrl.value = "http://172.31.0.6/grafana?kiosk";
 });
 
 

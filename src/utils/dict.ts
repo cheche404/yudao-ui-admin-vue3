@@ -114,8 +114,12 @@ export enum DICT_TYPE {
   DATE_INTERVAL = 'date_interval', // 数据间隔
 
   // ========== CMDB 模块 ==========
-  // ========== CMDB-host 模块 ==========
+  // ========== CMDB-对象模块 ==========
   CMDB_HOST_OS = 'cmdb_host_os',
+
+  // ========== CMDB-对象属性模块 ==========
+  CMDB_MODEL_ATTR_DATA_TYPE = 'cmdb_model_attr_data_type',
+  CMDB_YES_NO_TYPE = 'cmdb_yes_no_type',
 
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',
