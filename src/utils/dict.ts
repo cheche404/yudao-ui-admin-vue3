@@ -120,6 +120,7 @@ export enum DICT_TYPE {
   // ========== CMDB-对象属性模块 ==========
   CMDB_MODEL_ATTR_DATA_TYPE = 'cmdb_model_attr_data_type',
   CMDB_YES_NO_TYPE = 'cmdb_yes_no_type',
+  CMDB_ATTR_SELECT_TYPE = 'cmdb_attr_select_type',
 
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',

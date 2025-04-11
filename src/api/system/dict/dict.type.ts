@@ -9,6 +9,11 @@ export type DictTypeVO = {
   createTime: Date
 }
 
+// 查询CMDB字典（精简)列表
+export const getCmdbSimpleDictTypeList = () => {
+  return request.get({ url: '/system/dict-type/cmdb-list-all-simple' })
+}
+
 // 查询字典（精简)列表
 export const getSimpleDictTypeList = () => {
   return request.get({ url: '/system/dict-type/list-all-simple' })

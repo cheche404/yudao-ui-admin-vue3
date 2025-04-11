@@ -1,5 +1,5 @@
 <template>
-  <div class="ops-dashboard">
+  <div class="sso-component-dashboard">
     <iframe
       v-if="grafanaUrl"
       :src="grafanaUrl"
@@ -24,28 +24,20 @@ const router = useRouter();
 const formLoading = ref(false);
 const userToken  = getAccessToken()
 
-const queryParams = {
-  responseType: 'code',
-  clientId: '1074019084204507136',
-  redirectUri: 'http://172.31.0.6/grafana/login/generic_oauth',
-  state: Math.random().toString(36).substring(2),
-  scopes: ['user.read'],
-};
-
 onMounted(async () => {
-  // console.log("userToken", userToken)
-  // grafanaUrl.value = await handleAuthorize(true);
-  // grafanaUrl.value = "http://172.31.0.6/grafana/login/generic_oauth";
-  // const userToken = getAccessToken();
-  // const response = await request.get({url: `/grafana-proxy/sso?token=${userToken}` });
-  grafanaUrl.value = "http://172.31.0.6/grafana?kiosk";
+  try {
+    await request.get({ url: `/component-sso-proxy/sso?token=${userToken}` });
+    grafanaUrl.value = "http://172.31.0.6/grafana/dashboards?orgId=1&kiosk";
+  } catch (error) {
+    console.error("SSO 登录请求失败:", error);
+  }
 });
 
 
 </script>
 
 <style scoped>
-.ops-dashboard {
+.sso-component-dashboard {
   width: 100%;
   height: 100%;
 }
