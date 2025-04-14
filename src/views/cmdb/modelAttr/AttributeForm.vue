@@ -143,7 +143,6 @@ import { pinyin } from 'pinyin-pro'
 import {defaultProps, handleTree} from "@/utils/tree";
 import * as ModelApi from "@/api/cmdb/model";
 import * as DictTypeApi from '@/api/system/dict/dict.type'
-import {getCmdbSimpleDictTypeList} from "@/api/system/dict/dict.type";
 
 /** CMDB对象属性 表单 */
 defineOptions({ name: 'AttributeForm' })
@@ -171,7 +170,7 @@ const formData = ref({
   description: '',
   relationObjectType: undefined, // 关联对象
   objectModel: undefined,
-  relationDictId: undefined
+  relationDictId: ''
 })
 const formRules = reactive({
   name: [{ required: true, message: '属性名称不能为空', trigger: 'blur' }],
@@ -217,6 +216,7 @@ watch(
 watch(
   () => formData.value.attrType,
     (newAttrType) => {
+      formData.value.objectModel = undefined
       if (newAttrType === 'radio_group' || newAttrType === 'checkbox_group') {
         formData.value.relationObjectType = 'dict'; // 默认设置为 'dict'
       }
@@ -234,6 +234,7 @@ const open = async (type: string, id?: number, modelId?: number) => {
     formLoading.value = true
     try {
       formData.value = await AttributeApi.getAttribute(id)
+      console.log("---------------" + JSON.stringify(formData.value))
     } finally {
       formLoading.value = false
     }
