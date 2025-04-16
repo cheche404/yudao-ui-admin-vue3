@@ -294,17 +294,17 @@ let shortcut = reactive<Shortcut[]>([])
 const getShortcut = async () => {
   const data = [
     {
-      name: 'Github',
+      name: '生产区-Pinpoint',
       icon: 'akar-icons:github-fill',
-      url: 'github.io'
+      url: 'https://tracing-hw.digiwincloud.com.cn/main'
     },
     {
-      name: 'Vue',
+      name: '测试区-Pinpoint',
       icon: 'logos:vue',
-      url: 'vuejs.org'
+      url: 'https://tracing-hw-test.digiwincloud.com.cn/main'
     },
     {
-      name: 'Vite',
+      name: 'Grafana',
       icon: 'vscode-icons:file-type-vite',
       url: 'https://vitejs.dev/'
     },

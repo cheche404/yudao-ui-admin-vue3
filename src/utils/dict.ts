@@ -122,6 +122,15 @@ export enum DICT_TYPE {
   CMDB_YES_NO_TYPE = 'cmdb_yes_no_type',
   CMDB_ATTR_SELECT_TYPE = 'cmdb_attr_select_type',
 
+  // ========== CMDB-通用模块 ==========
+  CMDB_CLOUD_AREA = 'cmdb_cloud_area',
+  CMDB_Y_N_TYPE = 'cmdb_y_n_type',
+  CMDB_AREA = 'cmdb_area',
+  CMDB_TEAM = 'cmdb_team',
+  CMDB_CENTER = 'cmdb_center',
+  CMDB_ENV = 'cmdb_env',
+  CMDB_USER_GROUP = 'cmdb_user_group',
+
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',
   SYSTEM_MENU_TYPE = 'system_menu_type',

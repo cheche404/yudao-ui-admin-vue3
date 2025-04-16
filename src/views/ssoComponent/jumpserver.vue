@@ -26,8 +26,9 @@ const userToken  = getAccessToken()
 
 onMounted(async () => {
   try {
-    // await request.get({ url: `/component-sso-proxy/sso?token=${userToken}` });
-    jumpserverUrl.value = "http://172.31.0.6:18080";
+    await request.get({ url: `/component-sso-proxy/sso-jumpserver?token=${userToken}` });
+    // jumpserverUrl.value = "http://172.31.0.6:18080/core/auth/openid/callback/";
+    window.open("http://172.31.0.6:18080/core/auth/openid/callback/", "_blank");
   } catch (error) {
     console.error("SSO 登录请求失败:", error);
   }

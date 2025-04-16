@@ -26,13 +26,12 @@ const userToken  = getAccessToken()
 
 onMounted(async () => {
   try {
-    // await request.get({ url: `/component-sso-proxy/sso?token=${userToken}` });
-    archeryUrl.value = "http://172.31.0.7:9123";
+    await request.get({ url: `/component-sso-proxy/sso-archery?token=${userToken}` });
+    window.open("http://172.31.0.7:9123/oidc/callback", "_blank");
   } catch (error) {
-    console.error("SSO 登录请求失败:", error);
+    console.error("请求失败:", error);
   }
 });
-
 
 </script>
 
