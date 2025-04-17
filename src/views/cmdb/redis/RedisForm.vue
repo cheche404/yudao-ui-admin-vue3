@@ -6,7 +6,6 @@
       :rules="formRules"
       label-width="100px"
       v-loading="formLoading"
-      class="wide-form"
     >
       <el-row :gutter="20">
         <el-col :span="12">
@@ -79,13 +78,44 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="区域" prop="area">
+          <el-form-item label="推广者" prop="promoter">
+            <el-input v-model="formData.promoter" placeholder="请输入推广者" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="实例ID" prop="instanceId">
+            <el-input v-model="formData.instanceId" placeholder="请输入实例ID" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="实例名称" prop="instanceName">
+            <el-input v-model="formData.instanceName" placeholder="请输入实例名称" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="域名" prop="host">
+            <el-input v-model="formData.host" placeholder="请输入域名" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="域名只读" prop="hostReadonly">
+            <el-input v-model="formData.hostReadonly" placeholder="请输入域名只读" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="部署方式" prop="clusterType">
             <el-select
-              v-model="formData.area"
-              placeholder="请选择区域"
+              v-model="formData.clusterType"
+              placeholder="请选择部署方式"
             >
               <el-option
-                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_AREA)"
+                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE)"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
@@ -93,41 +123,17 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="推广者" prop="promoter">
-            <el-input v-model="formData.promoter" placeholder="请输入推广者" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="内网IP" prop="ipLan">
-            <el-input v-model="formData.ipLan" placeholder="请输入内网IP" />
+          <el-form-item label="端口" prop="port">
+            <el-input v-model="formData.port" placeholder="请输入端口" />
           </el-form-item>
         </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="外网IP" prop="ipWan">
-            <el-input v-model="formData.ipWan" placeholder="请输入外网IP" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="实例ID" prop="instanceId">
-            <el-input v-model="formData.instanceId" placeholder="请输入实例ID" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="实例名称" prop="instanceName">
-            <el-input v-model="formData.instanceName" placeholder="请输入实例名称" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="K8S节点" prop="k8sNode">
+          <el-form-item label="密码" prop="passwd">
             <el-select
-              v-model="formData.k8sNode"
+              v-model="formData.passwd"
               placeholder="请选择"
             >
               <el-option
@@ -137,6 +143,11 @@
                 :value="dict.value"
               />
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="内存大小(GB)" prop="mem">
+            <el-input v-model="formData.mem" placeholder="请输入内存大小(GB)" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -157,8 +168,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="CPU核心数" prop="cpu">
-            <el-input v-model="formData.cpu" placeholder="请输入CPU核心数(单位: C)" />
+          <el-form-item label="自建" prop="location">
+            <el-select
+              v-model="formData.location"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -176,12 +197,24 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="内存" prop="mem">
-            <el-input v-model="formData.mem" placeholder="请输入内存大小（单位：GB）" />
+          <el-form-item label="主机信息" prop="nodeInfo">
+            <el-input v-model="formData.nodeInfo" placeholder="请输入主机信息" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="是否监控" prop="monitored">
+          <el-form-item label="exporter-ip" prop="exporterIp">
+            <el-input v-model="formData.exporterIp" placeholder="请输入exporter-ip" />
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="exporter端口" prop="exporterPort">
+            <el-input v-model="formData.exporterPort" placeholder="请输入exporter端口" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="监控" prop="monitored">
             <el-select
               v-model="formData.monitored"
               placeholder="请选择"
@@ -193,18 +226,6 @@
                 :value="dict.value"
               />
             </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="exporter-ip" prop="exporterIp">
-            <el-input v-model="formData.exporterIp" placeholder="请输入监控exporterIP" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="exporter端口" prop="exporterPort">
-            <el-input v-model="formData.exporterPort" placeholder="请输入监控exporter端口" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -228,11 +249,11 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { HostApi, HostVO } from '@/api/cmdb/host'
-import { DICT_TYPE, getStrDictOptions } from "@/utils/dict"
+import { RedisApi, RedisVO } from '@/api/cmdb/redis'
+import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
 
-/** CMDB主机 表单 */
-defineOptions({ name: 'HostForm' })
+/** CMDB-Redis 表单 */
+defineOptions({ name: 'RedisForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -248,19 +269,21 @@ const formData = ref({
   center: undefined,
   team: undefined,
   user: undefined,
-  area: undefined,
   promoter: undefined,
-  ipLan: undefined,
-  ipWan: undefined,
   instanceId: undefined,
   instanceName: undefined,
-  k8sNode: 'N',
-  offline: 'N',
-  cpu: undefined,
+  host: undefined,
+  hostReadonly: undefined,
+  clusterType: undefined,
+  port: undefined,
+  passwd: 'Y',
   mem: undefined,
+  offline: 'N',
+  location: 'N',
   notes: undefined,
   ou: undefined,
   tags: undefined,
+  nodeInfo: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
   monitored: 'N',
@@ -284,7 +307,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await HostApi.getHost(id)
+      formData.value = await RedisApi.getRedis(id)
     } finally {
       formLoading.value = false
     }
@@ -300,12 +323,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as HostVO
+    const data = formData.value as unknown as RedisVO
     if (formType.value === 'create') {
-      await HostApi.createHost(data)
+      await RedisApi.createRedis(data)
       message.success(t('common.createSuccess'))
     } else {
-      await HostApi.updateHost(data)
+      await RedisApi.updateRedis(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -325,19 +348,21 @@ const resetForm = () => {
     center: undefined,
     team: undefined,
     user: undefined,
-    area: undefined,
     promoter: undefined,
-    ipLan: undefined,
-    ipWan: undefined,
     instanceId: undefined,
     instanceName: undefined,
-    k8sNode: 'N',
-    offline: 'N',
-    cpu: undefined,
+    host: undefined,
+    hostReadonly: undefined,
+    clusterType: undefined,
+    port: undefined,
+    passwd: 'Y',
     mem: undefined,
+    offline: 'N',
+    location: 'N',
     notes: undefined,
     ou: undefined,
     tags: undefined,
+    nodeInfo: undefined,
     exporterIp: undefined,
     exporterPort: undefined,
     monitored: 'N',

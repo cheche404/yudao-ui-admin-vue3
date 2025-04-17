@@ -118,14 +118,42 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="存储大小" prop="storage" v-show="showMore">
+      <el-form-item label="端口" prop="port" v-show="showMore">
         <el-input
-          v-model="queryParams.storage"
-          placeholder="请输入存储大小（单位：GB）"
+          v-model="queryParams.port"
+          placeholder="请输入端口"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
         />
+      </el-form-item>
+      <el-form-item label="密码" prop="passwd" v-show="showMore">
+        <el-input
+          v-model="queryParams.passwd"
+          placeholder="请输入密码"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="内存(GB)" prop="mem" v-show="showMore">
+        <el-input
+          v-model="queryParams.mem"
+          placeholder="请输入内存大小(GB)"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="离线" prop="offline" v-show="showMore">
+        <el-select v-model="queryParams.offline" placeholder="请选择" clearable class="!w-240px">
+          <el-option
+            v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
       </el-form-item>
       <el-form-item label="自建" prop="location" v-show="showMore">
         <el-select v-model="queryParams.location" placeholder="请选择是否自建" clearable class="!w-240px">
@@ -146,16 +174,6 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="离线" prop="offline" v-show="showMore">
-        <el-select v-model="queryParams.offline" placeholder="请选择" clearable class="!w-240px">
-          <el-option
-            v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
-      </el-form-item>
       <el-form-item label="组织单位" prop="ou" v-show="showMore">
         <el-input
           v-model="queryParams.ou"
@@ -174,10 +192,19 @@
           class="!w-240px"
         />
       </el-form-item>
+      <el-form-item label="主机信息" prop="nodeInfo" v-show="showMore">
+        <el-input
+          v-model="queryParams.nodeInfo"
+          placeholder="请输入主机信息"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
       <el-form-item label="exporter-ip" prop="exporterIp" v-show="showMore">
         <el-input
           v-model="queryParams.exporterIp"
-          placeholder="请输入监控exporterIP"
+          placeholder="请输入exporter-ip"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -186,7 +213,7 @@
       <el-form-item label="exporter端口" prop="exporterPort" v-show="showMore">
         <el-input
           v-model="queryParams.exporterPort"
-          placeholder="请输入监控exporter端口"
+          placeholder="请输入exporter端口"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -224,7 +251,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['cmdb:mysql:create']"
+          v-hasPermi="['cmdb:redis:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -233,11 +260,11 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['cmdb:mysql:export']"
+          v-hasPermi="['cmdb:redis:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button type="warning" plain @click="handleImport" v-hasPermi="['cmdb:mysql:import']">
+        <el-button type="warning" plain @click="handleImport" v-hasPermi="['cmdb:redis:import']">
           <Icon icon="ep:upload" /> 导入
         </el-button>
       </el-form-item>
@@ -247,7 +274,7 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-<!--      <el-table-column label="MySQL实例-ID" align="center" prop="id" />-->
+<!--      <el-table-column label="Redis实例-ID" align="center" prop="id" />-->
       <el-table-column label="云区域" align="center" prop="cloudArea" width="85px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CLOUD_AREA" :value="scope.row.cloudArea" />
@@ -261,6 +288,7 @@
       <el-table-column label="实例ID" align="center" prop="instanceId" width="320px" />
       <el-table-column label="实例名称" align="center" prop="instanceName" width="190px" />
       <el-table-column label="域名" align="center" prop="host" width="420px"/>
+      <el-table-column label="域名只读" align="center" prop="hostReadonly" width="60px"/>
       <el-table-column label="数据中心" align="center" prop="center" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
@@ -278,22 +306,29 @@
           <dict-tag :type="DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE" :value="scope.row.clusterType" />
         </template>
       </el-table-column>
-      <el-table-column label="存储大小" align="center" prop="storage" />
+      <el-table-column label="端口" align="center" prop="port" />
+      <el-table-column label="密码" align="center" prop="passwd">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.passwd" />
+        </template>
+      </el-table-column>
+      <el-table-column label="内存(GB)" align="center" prop="mem" />
+      <el-table-column label="离线" align="center" prop="offline">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.offline" />
+        </template>
+      </el-table-column>
       <el-table-column label="自建" align="center" prop="location" width="90px" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
         </template>
       </el-table-column>
-      <el-table-column label="离线" align="center" prop="offline" width="60px">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.offline" />
-        </template>
-      </el-table-column>
       <el-table-column label="组织单位" align="center" prop="ou" />
       <el-table-column label="标签" align="center" prop="tags" />
+      <el-table-column label="主机信息" align="center" prop="nodeInfo" />
       <el-table-column label="exporter-ip" align="center" prop="exporterIp" />
       <el-table-column label="exporter端口" align="center" prop="exporterPort" />
-      <el-table-column label="监控" align="center" prop="monitored">
+      <el-table-column label="监控" align="center" prop="monitored" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
@@ -312,7 +347,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['cmdb:mysql:update']"
+            v-hasPermi="['cmdb:host:update']"
           >
             编辑
           </el-button>
@@ -320,7 +355,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['cmdb:mysql:delete']"
+            v-hasPermi="['cmdb:host:delete']"
           >
             删除
           </el-button>
@@ -337,27 +372,27 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <MysqlForm ref="formRef" @success="getList" />
+  <RedisForm ref="formRef" @success="getList" />
 
-  <MysqlImportForm ref="importFormRef" @success="getList" />
+  <RedisImportForm ref="importFormRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { MysqlApi, MysqlVO } from '@/api/cmdb/mysql'
-import MysqlForm from './MysqlForm.vue'
-import MysqlImportForm from './MysqlImportForm.vue'
+import { RedisApi, RedisVO } from '@/api/cmdb/redis'
+import RedisForm from './RedisForm.vue'
+import RedisImportForm from './RedisImportForm.vue'
 import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
 
-/** CMDB-MySQL 列表 */
-defineOptions({ name: 'Mysql' })
+/** CMDB-Redis 列表 */
+defineOptions({ name: 'Redis' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<MysqlVO[]>([]) // 列表的数据
+const list = ref<RedisVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const showMore = ref(false) // 控制更多搜索条件的显示/隐藏
 const queryParams = reactive({
@@ -368,19 +403,24 @@ const queryParams = reactive({
   center: undefined,
   team: undefined,
   user: undefined,
+  promoter: undefined,
   instanceId: undefined,
   instanceName: undefined,
   host: undefined,
+  hostReadonly: undefined,
   clusterType: undefined,
-  storage: undefined,
-  location: 'N',
+  port: undefined,
+  passwd: undefined,
+  mem: undefined,
+  offline: undefined,
+  location: undefined,
   notes: undefined,
-  offline: 'N',
   ou: undefined,
   tags: undefined,
+  nodeInfo: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
-  monitored: 'N',
+  monitored: undefined,
   createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
@@ -391,7 +431,7 @@ const toggleMore = () => {
   showMore.value = !showMore.value
 }
 
-/** MySQL导入 */
+/** Redis导入 */
 const importFormRef = ref()
 const handleImport = () => {
   importFormRef.value.open()
@@ -401,7 +441,7 @@ const handleImport = () => {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await MysqlApi.getMysqlPage(queryParams)
+    const data = await RedisApi.getRedisPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -433,7 +473,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await MysqlApi.deleteMysql(id)
+    await RedisApi.deleteRedis(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -447,8 +487,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await MysqlApi.exportMysql(queryParams)
-    download.excel(data, 'CMDB-MySQL.xls')
+    const data = await RedisApi.exportRedis(queryParams)
+    download.excel(data, 'CMDB-Redis.xls')
   } catch {
   } finally {
     exportLoading.value = false

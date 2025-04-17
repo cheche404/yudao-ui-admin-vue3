@@ -1,5 +1,5 @@
 <template>
-  <Dialog v-model="dialogVisible" title="主机导入" width="400">
+  <Dialog v-model="dialogVisible" title="Redis导入" width="400">
     <el-upload
       ref="uploadRef"
       v-model:file-list="fileList"
@@ -20,7 +20,7 @@
         <div class="el-upload__tip text-center">
           <div class="el-upload__tip">
             <el-checkbox v-model="updateSupport" />
-            是否更新已经存在的主机数据
+            是否更新已经存在的Redis数据
           </div>
           <span>仅允许导入 xls、xlsx 格式文件。</span>
           <el-link
@@ -43,9 +43,9 @@
 <script lang="ts" setup>
 import { getAccessToken, getTenantId } from '@/utils/auth'
 import download from '@/utils/download'
-import {HostApi} from "@/api/cmdb/host";
+import {RedisApi} from "@/api/cmdb/redis";
 
-defineOptions({ name: 'CMDBHostImportForm' })
+defineOptions({ name: 'CMDBRedisImportForm' })
 
 const message = useMessage() // 消息弹窗
 
@@ -53,10 +53,10 @@ const dialogVisible = ref(false) // 弹窗的是否展示
 const formLoading = ref(false) // 表单的加载中
 const uploadRef = ref()
 const importUrl =
-  import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL + '/cmdb/host/import'
+  import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL + '/cmdb/redis/import'
 const uploadHeaders = ref() // 上传 Header 头
 const fileList = ref([]) // 文件列表
-const updateSupport = ref(0) // 是否更新已经存在的主机数据
+const updateSupport = ref(0) // 是否更新已经存在的Redis数据
 
 /** 打开弹窗 */
 const open = () => {
@@ -132,7 +132,7 @@ const handleExceed = (): void => {
 
 /** 下载模板操作 */
 const importTemplate = async () => {
-  const res = await HostApi.importHostTemplate()
-  download.excel(res, '主机导入模版.xls')
+  const res = await RedisApi.importMysqlTemplate()
+  download.excel(res, 'Redis导入模版.xls')
 }
 </script>

@@ -74,17 +74,7 @@
       <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="用户" prop="user">
-            <el-select
-              v-model="formData.user"
-              placeholder="请选择用户"
-            >
-              <el-option
-                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_USER_GROUP)"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
+            <el-input v-model="formData.user" placeholder="请输入用户" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -118,7 +108,7 @@
               placeholder="请选择部署方式"
             >
               <el-option
-                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_MYSQL_INSTALL_TYPE)"
+                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE)"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
@@ -134,8 +124,18 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="location" prop="location">
-            <el-input v-model="formData.location" placeholder="请输入location" />
+          <el-form-item label="自建" prop="location">
+            <el-select
+              v-model="formData.location"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
           </el-form-item>
         </el-col>
       </el-row>
@@ -180,7 +180,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="是否监控" prop="monitored">
+          <el-form-item label="监控" prop="monitored">
             <el-select
               v-model="formData.monitored"
               placeholder="请选择"
@@ -241,14 +241,14 @@ const formData = ref({
   host: undefined,
   clusterType: undefined,
   storage: undefined,
-  location: undefined,
+  location: 'N',
   notes: undefined,
-  offline: undefined,
+  offline: 'N',
   ou: undefined,
   tags: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
-  monitored: undefined,
+  monitored:'N',
 })
 const formRules = reactive({
   cloudArea: [{ required: true, message: '云区域不能为空', trigger: 'blur' }],
@@ -316,14 +316,14 @@ const resetForm = () => {
     host: undefined,
     clusterType: undefined,
     storage: undefined,
-    location: undefined,
+    location: 'N',
     notes: undefined,
-    offline: undefined,
+    offline: 'N',
     ou: undefined,
     tags: undefined,
     exporterIp: undefined,
     exporterPort: undefined,
-    monitored: undefined,
+    monitored: 'N',
   }
   formRef.value?.resetFields()
 }

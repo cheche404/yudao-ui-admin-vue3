@@ -20,7 +20,7 @@
         <div class="el-upload__tip text-center">
           <div class="el-upload__tip">
             <el-checkbox v-model="updateSupport" />
-            是否更新已经存在的用户数据
+            是否更新已经存在的MySQL数据
           </div>
           <span>仅允许导入 xls、xlsx 格式文件。</span>
           <el-link
@@ -57,7 +57,7 @@ const importUrl =
   import.meta.env.VITE_BASE_URL + import.meta.env.VITE_API_URL + '/cmdb/mysql/import'
 const uploadHeaders = ref() // 上传 Header 头
 const fileList = ref([]) // 文件列表
-const updateSupport = ref(0) // 是否更新已经存在的用户数据
+const updateSupport = ref(0) // 是否更新已经存在的MySQL数据
 
 /** 打开弹窗 */
 const open = () => {
