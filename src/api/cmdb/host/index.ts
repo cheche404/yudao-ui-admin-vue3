@@ -58,7 +58,7 @@ export const HostApi = {
     return await request.download({ url: `/cmdb/host/export-excel`, params })
   },
 
-  // 下载用户导入模板
+  // 下载主机导入模板
   importHostTemplate: () => {
     return request.download({ url: '/cmdb/host/get-import-template' })
   },

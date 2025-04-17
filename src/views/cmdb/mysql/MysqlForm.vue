@@ -6,7 +6,6 @@
       :rules="formRules"
       label-width="100px"
       v-loading="formLoading"
-      class="wide-form"
     >
       <el-row :gutter="20">
         <el-col :span="12">
@@ -89,64 +88,54 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="区域" prop="area">
-            <el-select
-              v-model="formData.area"
-              placeholder="请选择区域"
-            >
-              <el-option
-                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_AREA)"
-                :key="dict.value"
-                :label="dict.label"
-                :value="dict.value"
-              />
-            </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
           <el-form-item label="推广者" prop="promoter">
             <el-input v-model="formData.promoter" placeholder="请输入推广者" />
           </el-form-item>
         </el-col>
-        <el-col :span="12">
-          <el-form-item label="内网IP" prop="ipLan">
-            <el-input v-model="formData.ipLan" placeholder="请输入内网IP" />
-          </el-form-item>
-        </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="外网IP" prop="ipWan">
-            <el-input v-model="formData.ipWan" placeholder="请输入外网IP" />
-          </el-form-item>
-        </el-col>
         <el-col :span="12">
           <el-form-item label="实例ID" prop="instanceId">
             <el-input v-model="formData.instanceId" placeholder="请输入实例ID" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="实例名称" prop="instanceName">
             <el-input v-model="formData.instanceName" placeholder="请输入实例名称" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="K8S节点" prop="k8sNode">
+          <el-form-item label="域名" prop="host">
+            <el-input v-model="formData.host" placeholder="请输入域名" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="部署方式" prop="clusterType">
             <el-select
-              v-model="formData.k8sNode"
-              placeholder="请选择"
+              v-model="formData.clusterType"
+              placeholder="请选择部署方式"
             >
               <el-option
-                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
+                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_MYSQL_INSTALL_TYPE)"
                 :key="dict.value"
                 :label="dict.label"
                 :value="dict.value"
               />
             </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row :gutter="20">
+        <el-col :span="12">
+          <el-form-item label="存储大小(GB)" prop="storage">
+            <el-input v-model="formData.storage" placeholder="请输入存储大小（单位：GB）" />
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="location" prop="location">
+            <el-input v-model="formData.location" placeholder="请输入location" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -167,27 +156,27 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="CPU核心数" prop="cpu">
-            <el-input v-model="formData.cpu" placeholder="请输入CPU核心数(单位: C)" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
           <el-form-item label="组织单位" prop="ou">
             <el-input v-model="formData.ou" placeholder="请输入组织单位" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="标签" prop="tags">
             <el-input v-model="formData.tags" placeholder="请输入标签" />
           </el-form-item>
         </el-col>
+        <el-col :span="12">
+          <el-form-item label="exporter-ip" prop="exporterIp">
+            <el-input v-model="formData.exporterIp" placeholder="请输入监控exporterIP" />
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="内存" prop="mem">
-            <el-input v-model="formData.mem" placeholder="请输入内存大小（单位：GB）" />
+          <el-form-item label="监控exporter端口" prop="exporterPort">
+            <el-input v-model="formData.exporterPort" placeholder="请输入监控exporter端口" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -203,18 +192,6 @@
                 :value="dict.value"
               />
             </el-select>
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="exporter-ip" prop="exporterIp">
-            <el-input v-model="formData.exporterIp" placeholder="请输入监控exporterIP" />
-          </el-form-item>
-        </el-col>
-        <el-col :span="12">
-          <el-form-item label="exporter端口" prop="exporterPort">
-            <el-input v-model="formData.exporterPort" placeholder="请输入监控exporter端口" />
           </el-form-item>
         </el-col>
       </el-row>
@@ -238,11 +215,11 @@
   </Dialog>
 </template>
 <script setup lang="ts">
-import { HostApi, HostVO } from '@/api/cmdb/host'
-import { DICT_TYPE, getStrDictOptions } from "@/utils/dict"
+import { MysqlApi, MysqlVO } from '@/api/cmdb/mysql'
+import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
 
-/** CMDB主机 表单 */
-defineOptions({ name: 'HostForm' })
+/** CMDB-MySQL 表单 */
+defineOptions({ name: 'MysqlForm' })
 
 const { t } = useI18n() // 国际化
 const message = useMessage() // 消息弹窗
@@ -258,22 +235,20 @@ const formData = ref({
   center: undefined,
   team: undefined,
   user: undefined,
-  area: undefined,
   promoter: undefined,
-  ipLan: undefined,
-  ipWan: undefined,
   instanceId: undefined,
   instanceName: undefined,
-  k8sNode: 'N',
-  offline: 'N',
-  cpu: undefined,
-  mem: undefined,
+  host: undefined,
+  clusterType: undefined,
+  storage: undefined,
+  location: undefined,
   notes: undefined,
+  offline: undefined,
   ou: undefined,
   tags: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
-  monitored: 'N',
+  monitored: undefined,
 })
 const formRules = reactive({
   cloudArea: [{ required: true, message: '云区域不能为空', trigger: 'blur' }],
@@ -294,7 +269,7 @@ const open = async (type: string, id?: number) => {
   if (id) {
     formLoading.value = true
     try {
-      formData.value = await HostApi.getHost(id)
+      formData.value = await MysqlApi.getMysql(id)
     } finally {
       formLoading.value = false
     }
@@ -310,12 +285,12 @@ const submitForm = async () => {
   // 提交请求
   formLoading.value = true
   try {
-    const data = formData.value as unknown as HostVO
+    const data = formData.value as unknown as MysqlVO
     if (formType.value === 'create') {
-      await HostApi.createHost(data)
+      await MysqlApi.createMysql(data)
       message.success(t('common.createSuccess'))
     } else {
-      await HostApi.updateHost(data)
+      await MysqlApi.updateMysql(data)
       message.success(t('common.updateSuccess'))
     }
     dialogVisible.value = false
@@ -335,22 +310,20 @@ const resetForm = () => {
     center: undefined,
     team: undefined,
     user: undefined,
-    area: undefined,
     promoter: undefined,
-    ipLan: undefined,
-    ipWan: undefined,
     instanceId: undefined,
     instanceName: undefined,
-    k8sNode: 'N',
-    offline: 'N',
-    cpu: undefined,
-    mem: undefined,
+    host: undefined,
+    clusterType: undefined,
+    storage: undefined,
+    location: undefined,
     notes: undefined,
+    offline: undefined,
     ou: undefined,
     tags: undefined,
     exporterIp: undefined,
     exporterPort: undefined,
-    monitored: 'N',
+    monitored: undefined,
   }
   formRef.value?.resetFields()
 }

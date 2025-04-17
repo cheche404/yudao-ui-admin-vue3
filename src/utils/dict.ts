@@ -131,6 +131,9 @@ export enum DICT_TYPE {
   CMDB_ENV = 'cmdb_env',
   CMDB_USER_GROUP = 'cmdb_user_group',
 
+// ========== CMDB-MySQL模块 ==========
+  CMDB_MYSQL_INSTALL_TYPE = 'cmdb_mysql_install_type',
+
   // ========== SYSTEM 模块 ==========
   SYSTEM_USER_SEX = 'system_user_sex',
   SYSTEM_MENU_TYPE = 'system_menu_type',
