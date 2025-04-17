@@ -67,13 +67,13 @@ watch(
       to="/"
     >
       <img
-        class="h-[1.75em] w-auto min-h-[24px]"
+        class="w-[40px] h-[40px] object-contain"
         src="@/assets/imgs/logo-icon.png"
       />
       <div
         v-if="show"
         :class="[
-          'ml-10px text-16px font-700',
+          'ml-10px text-20px font-700',
           {
             'text-[var(--logo-title-text-color)]': layout === 'classic',
             'text-[var(--top-header-text-color)]':
