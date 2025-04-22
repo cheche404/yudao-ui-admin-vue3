@@ -15,19 +15,16 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import {getAccessToken} from "@/utils/auth";
 import request from '@/config/axios'
 
 const archeryUrl = ref('');
-const router = useRouter();
-const formLoading = ref(false);
-const userToken  = getAccessToken()
+const userToken  = getAccessToken();
 
 onMounted(async () => {
   try {
     await request.get({ url: `/component-sso-proxy/sso-archery?token=${userToken}` });
-    window.open("http://172.31.0.7:9123/oidc/callback", "_blank");
+    window.open(import.meta.env.VITE_ARCHERY_URL + "/oidc/callback", "_blank");
   } catch (error) {
     console.error("请求失败:", error);
   }

@@ -1957,5 +1957,8 @@ export const IconJson = {
     'x-ray',
     'yen-sign',
     'yin-yang'
+  ],
+  'lucide': [
+
   ]
 }

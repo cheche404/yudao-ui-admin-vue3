@@ -15,19 +15,16 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import {getAccessToken} from "@/utils/auth";
 import request from '@/config/axios'
 
 const rancherUrl = ref('');
-const router = useRouter();
-const formLoading = ref(false);
 const userToken  = getAccessToken()
 
 onMounted(async () => {
   try {
     await request.get({ url: `/component-sso-proxy/sso-rancher?token=${userToken}` });
-    window.open("https://172.31.0.6:8443", "_blank");
+    window.open(import.meta.env.VITE_RANCHER_URL + "", "_blank");
   } catch (error) {
     console.error("请求失败:", error);
   }

@@ -15,19 +15,16 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import { useRouter } from 'vue-router';
 import {getAccessToken} from "@/utils/auth";
 import request from '@/config/axios'
 
 const grafanaUrl = ref('');
-const router = useRouter();
-const formLoading = ref(false);
 const userToken  = getAccessToken()
 
 onMounted(async () => {
   try {
-    await request.get({ url: `/component-sso-proxy/sso?token=${userToken}` });
-    grafanaUrl.value = "http://172.31.0.6/grafana/dashboards?orgId=1&kiosk";
+    await request.get({ url: `/component-sso-proxy/sso-grafana?token=${userToken}` });
+    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + "/dashboards?orgId=1&kiosk";
   } catch (error) {
     console.error("SSO 登录请求失败:", error);
   }
