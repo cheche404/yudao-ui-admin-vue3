@@ -23,7 +23,7 @@ const userToken  = getAccessToken()
 
 onMounted(async () => {
   try {
-    await request.get({ url: `/component-sso-proxy/sso-grafana?token=${userToken}` });
+    await request.get({ url: `/component-sso-proxy/sso?token=${userToken}` });
     grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + "/dashboards?orgId=1&kiosk";
   } catch (error) {
     console.error("SSO 登录请求失败:", error);

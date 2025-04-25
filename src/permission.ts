@@ -61,7 +61,24 @@ router.beforeEach(async (to, from, next) => {
   start()
   loadStart()
   if (getAccessToken()) {
-    if (to.path === '/login') {
+    // SSO登陆第三方 Archery、Grafana、Jumpserver、Rancher 等使用
+    if (to.path === '/login/sso-components') {
+      if (typeof to.query.redirect === 'string') {
+        try {
+          // 使用 URL 对象解析 redirect
+          const url = new URL(to.query.redirect);
+          // window.open(url + "&token=" + getAccessToken());
+          window.location.href = url + "&token=" + getAccessToken()
+        } catch (e) {
+          const url = new URL(to.query.redirect);
+          // 如果 redirect 不是有效 URL，直接使用原始值（假设是路径）
+          window.location.href = url + "&token=" + getAccessToken()
+          // next(to.query.redirect);
+        }
+      } else {
+        next(); // 如果 redirect 不存在，继续正常导航
+      }
+    } else if (to.path === '/login') {
       next({ path: '/' })
     } else {
       // 获取所有字典
