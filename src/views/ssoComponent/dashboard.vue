@@ -15,16 +15,17 @@
 
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
-import {getAccessToken} from "@/utils/auth";
-import request from '@/config/axios'
+
 
 const grafanaUrl = ref('');
-const userToken  = getAccessToken()
 
 onMounted(async () => {
   try {
-    await request.get({ url: `/component-sso-proxy/sso?token=${userToken}` });
-    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + "/dashboards?orgId=1&kiosk";
+    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/login/generic_oauth'
+    // 等待 0.5 秒
+    await new Promise(resolve => setTimeout(resolve, 500));
+
+    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/dashboards?orgId=1&kiosk'
   } catch (error) {
     console.error("SSO 登录请求失败:", error);
   }
