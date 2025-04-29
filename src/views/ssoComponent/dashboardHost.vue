@@ -1,3 +1,4 @@
+<!--容器大屏-->
 <template>
   <div class="sso-component-dashboard">
     <iframe
@@ -20,9 +21,9 @@ import { ref, onMounted } from 'vue';
 const grafanaUrl = ref('');
 
 onMounted(async () => {
-    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/login/generic_oauth'
-    await new Promise(resolve => setTimeout(resolve, 500)); // 睡眠 0.5秒
-    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/dashboards?orgId=1&kiosk=full&theme=light'
+  grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/login/generic_oauth'
+  await new Promise(resolve => setTimeout(resolve, 500)); // 睡眠 0.5秒
+  grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/d/fiNuFG87/zhu-ji-jian-kong?orgId=1&kiosk=full&theme=light'
 });
 
 

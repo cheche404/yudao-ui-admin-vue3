@@ -9,7 +9,9 @@
       style="min-height: 800px;"
       sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
     ></iframe>
-    <div v-else>加载中...</div>
+    <div v-else>
+      <button @click="redirectToJumpserver">堡垒机</button>
+    </div>
   </div>
 </template>
 
@@ -19,13 +21,13 @@ import { ref, onMounted } from 'vue';
 const jumpserverUrl = ref('');
 
 onMounted(async () => {
-  try {
-    window.open(import.meta.env.VITE_JUMPSERVER_URL + "/core/auth/openid/callback/", "_blank");
-  } catch (error) {
-    console.error("SSO 登录请求失败:", error);
-  }
+  window.open(import.meta.env.VITE_JUMPSERVER_URL + "/core/auth/openid/callback/", "_blank");
 });
 
+const redirectToJumpserver = () => {
+  // Redirect to the URL when the button is clicked
+  window.open(import.meta.env.VITE_JUMPSERVER_URL + "/core/auth/openid/callback/", "_blank");
+};
 
 </script>
 
@@ -33,5 +35,19 @@ onMounted(async () => {
 .sso-component-dashboard {
   width: 100%;
   height: 100%;
+}
+
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
 }
 </style>

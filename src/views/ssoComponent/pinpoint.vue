@@ -1,8 +1,8 @@
 <template>
-  <div class="sso-component-dashboard">
+  <div class="sso-component-pinpoint">
     <iframe
-      v-if="grafanaUrl"
-      :src="grafanaUrl"
+      v-if="pinpointUrl"
+      :src="pinpointUrl"
       frameborder="0"
       width="100%"
       height="100%"
@@ -16,20 +16,17 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 
-
-const grafanaUrl = ref('');
+const pinpointUrl = ref('');
 
 onMounted(async () => {
-    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/login/generic_oauth'
-    await new Promise(resolve => setTimeout(resolve, 500)); // 睡眠 0.5秒
-    grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/dashboards?orgId=1&kiosk=full&theme=light'
+  pinpointUrl.value = 'https://tracing-hw.digiwincloud.com.cn/main'
 });
 
 
 </script>
 
 <style scoped>
-.sso-component-dashboard {
+.sso-component-pinpoint {
   width: 100%;
   height: 100%;
 }
