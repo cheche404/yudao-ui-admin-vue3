@@ -59,7 +59,7 @@ export const useAppStore = defineStore('app', {
       locale: true, // 多语言图标
       message: true, // 消息图标
       tagsView: true, // 标签页
-      tagsViewImmerse: false, // 标签页沉浸
+      tagsViewImmerse: true, // 标签页沉浸
       tagsViewIcon: true, // 是否显示标签图标
       logo: true, // logo
       fixedHeader: true, // 固定toolheader

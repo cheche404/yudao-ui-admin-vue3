@@ -1,5 +1,5 @@
 <template>
-  <div class="sso-component-dashboard">
+  <div class="sso-component-jumpserver">
     <iframe
       v-if="jumpserverUrl"
       :src="jumpserverUrl"
@@ -32,7 +32,7 @@ const redirectToJumpserver = () => {
 </script>
 
 <style scoped>
-.sso-component-dashboard {
+.sso-component-jumpserver {
   width: 100%;
   height: 100%;
 }

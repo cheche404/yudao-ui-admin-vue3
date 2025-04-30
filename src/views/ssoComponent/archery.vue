@@ -1,5 +1,5 @@
 <template>
-  <div class="sso-component-dashboard">
+  <div class="sso-component-archery">
     <iframe
       v-if="archeryUrl"
       :src="archeryUrl"
@@ -31,7 +31,7 @@ const redirectToArchery = () => {
 </script>
 
 <style scoped>
-.sso-component-dashboard {
+.sso-component-archery {
   width: 100%;
   height: 100%;
 }

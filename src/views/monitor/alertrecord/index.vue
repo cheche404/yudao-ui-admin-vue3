@@ -237,7 +237,7 @@
               :show-overflow-tooltip="true"
             >
               <el-table-column label="环境信息" align="center" prop="env" width="100px"/>
-              <el-table-column label="告警来源" align="center" prop="alertSource" width="90px">
+              <el-table-column label="告警来源" align="center" prop="alertSource" width="100px">
                 <template #default="scope">
                   <dict-tag :type="DICT_TYPE.ALERT_SOURCE" :value="scope.row.alertSource" />
                 </template>
@@ -277,14 +277,14 @@
               <!--          <el-table-column label="团队" align="center" prop="team" />-->
               <el-table-column label="操作" align="center" min-width="120px" fixed="right">
                 <template #default="scope">
-<!--                  <el-button-->
-<!--                    link-->
-<!--                    type="primary"-->
-<!--                    @click="openForm('update', scope.row.id)"-->
-<!--                    v-hasPermi="['monitor:alert-record:update']"-->
-<!--                  >-->
-<!--                    编辑-->
-<!--                  </el-button>-->
+                  <!--                  <el-button-->
+                  <!--                    link-->
+                  <!--                    type="primary"-->
+                  <!--                    @click="openForm('update', scope.row.id)"-->
+                  <!--                    v-hasPermi="['monitor:alert-record:update']"-->
+                  <!--                  >-->
+                  <!--                    编辑-->
+                  <!--                  </el-button>-->
                   <el-button
                     link
                     type="danger"
@@ -319,6 +319,7 @@ import download from '@/utils/download'
 import { AlertRecordApi, AlertRecordVO } from '@/api/monitor/alertrecord'
 import AlertRecordForm from './AlertRecordForm.vue'
 import { getStrDictOptions, DICT_TYPE } from '@/utils/dict'
+import { onMounted, onUnmounted, ref, reactive } from 'vue'
 
 /** 告警记录 列表 */
 defineOptions({ name: 'AlertRecord' })
@@ -334,6 +335,9 @@ const tabData = ref<
 >({}) // List data for each Tab
 const queryFormRefs = ref<Record<string, any>>({}) // Form refs for each Tab
 const exportLoading = ref(false) // Export loading state
+
+// 自动刷新定时器引用，使用 NodeJS.Timeout 修复类型错误
+let refreshInterval: NodeJS.Timeout | null = null
 
 /** Get or create Tab's queryParams */
 const getTabQueryParams = (tabValue: string) => {
@@ -398,6 +402,21 @@ const fetchFiringCount = async (tabValue: string) => {
   }
 }
 
+/** Fetch data for a specific tab */
+const fetchTabData = async (tabValue: string) => {
+  const currentParams = getTabQueryParams(tabValue)
+  const currentData = getTabData(tabValue)
+  currentData.loading = true
+  try {
+    const data = await AlertRecordApi.getAlertRecordPage(currentParams)
+    currentData.list = data.list
+    currentData.total = data.total
+    await fetchFiringCount(tabValue)
+  } finally {
+    currentData.loading = false
+  }
+}
+
 /** Fetch monitor_type list and initialize all tabs */
 const fetchMonitorTypes = async () => {
   monitorTypes.value = getStrDictOptions(DICT_TYPE.ALERT_TYPE)
@@ -407,36 +426,14 @@ const fetchMonitorTypes = async () => {
     for (const type of monitorTypes.value) {
       getTabQueryParams(type.value)
       getTabData(type.value)
-      // Load data for each tab
-      const currentParams = getTabQueryParams(type.value)
-      const currentData = getTabData(type.value)
-      currentData.loading = true
-      try {
-        const data = await AlertRecordApi.getAlertRecordPage(currentParams)
-        currentData.list = data.list
-        currentData.total = data.total
-        await fetchFiringCount(type.value)
-      } finally {
-        currentData.loading = false
-      }
+      await fetchTabData(type.value) // Load data for each tab
     }
   }
 }
 
 /** Query list for current tab */
 const getList = async () => {
-  const currentTab = activeTab.value
-  const currentParams = getTabQueryParams(currentTab)
-  const currentData = getTabData(currentTab)
-  currentData.loading = true
-  try {
-    const data = await AlertRecordApi.getAlertRecordPage(currentParams)
-    currentData.list = data.list
-    currentData.total = data.total
-    await fetchFiringCount(currentTab)
-  } finally {
-    currentData.loading = false
-  }
+  await fetchTabData(activeTab.value)
 }
 
 /** Search button operation */
@@ -519,9 +516,23 @@ const handleExport = async () => {
   }
 }
 
-/** Initialize */
+/** Initialize and set up auto-refresh for all tabs */
 onMounted(() => {
   fetchMonitorTypes()
+  // 设置每60秒自动刷新所有选项卡数据
+  refreshInterval = setInterval(() => {
+    monitorTypes.value.forEach(type => {
+      fetchTabData(type.value)
+    })
+  }, 60000)
+})
+
+/** Clear auto-refresh timer when component is unmounted */
+onUnmounted(() => {
+  if (refreshInterval) {
+    clearInterval(refreshInterval)
+    refreshInterval = null
+  }
 })
 </script>
 

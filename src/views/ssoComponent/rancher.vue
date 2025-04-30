@@ -1,5 +1,5 @@
 <template>
-  <div class="sso-component-dashboard">
+  <div class="sso-component-rancher">
     <iframe
       v-if="rancherUrl"
       :src="rancherUrl"
@@ -31,7 +31,7 @@ const redirectToRancher = () => {
 </script>
 
 <style scoped>
-.sso-component-dashboard {
+.sso-component-rancher {
   width: 100%;
   height: 100%;
 }
