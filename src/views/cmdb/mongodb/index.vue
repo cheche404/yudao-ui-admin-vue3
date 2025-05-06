@@ -99,15 +99,6 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="推广者" prop="promoter" v-show="showMore">
-        <el-input
-          v-model="queryParams.promoter"
-          placeholder="请输入推广者"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
       <el-form-item label="部署方式" prop="clusterType" v-show="showMore">
         <el-select v-model="queryParams.clusterType" placeholder="请选择实例部署方式" clearable class="!w-240px">
           <el-option
@@ -118,10 +109,28 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="存储大小" prop="storage" v-show="showMore">
+      <el-form-item label="CPU(核)" prop="cpu" v-show="showMore">
+        <el-input
+          v-model="queryParams.cpu"
+          placeholder="请输入CPU(核)"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="内存大小(GB)" prop="mem" v-show="showMore">
+        <el-input
+          v-model="queryParams.mem"
+          placeholder="请输入内存大小(GB)"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="磁盘大小(GB)" prop="storage" v-show="showMore">
         <el-input
           v-model="queryParams.storage"
-          placeholder="请输入存储大小（单位：GB）"
+          placeholder="请输入磁盘大小(GB)"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -174,6 +183,15 @@
           class="!w-240px"
         />
       </el-form-item>
+      <el-form-item label="主机信息" prop="nodeInfo" v-show="showMore">
+        <el-input
+          v-model="queryParams.nodeInfo"
+          placeholder="请输入主机信息"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
       <el-form-item label="exporter-ip" prop="exporterIp" v-show="showMore">
         <el-input
           v-model="queryParams.exporterIp"
@@ -202,7 +220,7 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="创建时间" prop="createTime" v-show="showMore">
+      <el-form-item label="创建时间" prop="createTime">
         <el-date-picker
           v-model="queryParams.createTime"
           value-format="YYYY-MM-DD HH:mm:ss"
@@ -224,7 +242,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['cmdb:mysql:create']"
+          v-hasPermi="['cmdb:mongodb:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -233,11 +251,11 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['cmdb:mysql:export']"
+          v-hasPermi="['cmdb:mongodb:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button type="warning" plain @click="handleImport" v-hasPermi="['cmdb:mysql:import']">
+        <el-button type="warning" plain @click="handleImport" v-hasPermi="['cmdb:mongodb:import']">
           <Icon icon="ep:upload" /> 导入
         </el-button>
       </el-form-item>
@@ -247,7 +265,7 @@
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-<!--      <el-table-column label="MySQL实例-ID" align="center" prop="id" />-->
+<!--      <el-table-column label="MongoDB实例-ID" align="center" prop="id" />-->
       <el-table-column label="云区域" align="center" prop="cloudArea" width="85px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CLOUD_AREA" :value="scope.row.cloudArea" />
@@ -278,7 +296,9 @@
           <dict-tag :type="DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE" :value="scope.row.clusterType" />
         </template>
       </el-table-column>
-      <el-table-column label="存储大小" align="center" prop="storage" />
+      <el-table-column label="CPU(核)" align="center" prop="cpu" />
+      <el-table-column label="内存大小(GB)" align="center" prop="mem" />
+      <el-table-column label="磁盘大小(GB)" align="center" prop="storage" />
       <el-table-column label="自建" align="center" prop="location" width="90px" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
@@ -291,6 +311,7 @@
       </el-table-column>
       <el-table-column label="组织单位" align="center" prop="ou" />
       <el-table-column label="标签" align="center" prop="tags" />
+      <el-table-column label="主机信息" align="center" prop="nodeInfo" />
       <el-table-column label="exporter-ip" align="center" prop="exporterIp" />
       <el-table-column label="exporter端口" align="center" prop="exporterPort" />
       <el-table-column label="监控" align="center" prop="monitored">
@@ -312,7 +333,7 @@
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['cmdb:mysql:update']"
+            v-hasPermi="['cmdb:mongodb:update']"
           >
             编辑
           </el-button>
@@ -320,7 +341,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['cmdb:mysql:delete']"
+            v-hasPermi="['cmdb:mongodb:delete']"
           >
             删除
           </el-button>
@@ -337,27 +358,28 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <MysqlForm ref="formRef" @success="getList" />
+  <MongodbForm ref="formRef" @success="getList" />
 
-  <MysqlImportForm ref="importFormRef" @success="getList" />
+  <MongodbImportForm ref="importFormRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
 import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { MysqlApi, MysqlVO } from '@/api/cmdb/mysql'
-import MysqlForm from './MysqlForm.vue'
-import MysqlImportForm from './MysqlImportForm.vue'
-import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
+import { MongodbApi, MongodbVO } from '@/api/cmdb/mongodb'
+import MongodbForm from './MongodbForm.vue'
+import MongodbImportForm from './MongodbImportForm.vue'
+import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
 
-/** CMDB-MySQL 列表 */
-defineOptions({ name: 'Mysql' })
+
+/** CMDB-MongoDB 列表 */
+defineOptions({ name: 'Mongodb' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<MysqlVO[]>([]) // 列表的数据
+const list = ref<MongodbVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const showMore = ref(false) // 控制更多搜索条件的显示/隐藏
 const queryParams = reactive({
@@ -373,12 +395,15 @@ const queryParams = reactive({
   instanceName: undefined,
   host: undefined,
   clusterType: undefined,
+  cpu: undefined,
+  mem: undefined,
   storage: undefined,
   location: undefined,
   notes: undefined,
   offline: undefined,
   ou: undefined,
   tags: undefined,
+  nodeInfo: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
   monitored: undefined,
@@ -392,7 +417,7 @@ const toggleMore = () => {
   showMore.value = !showMore.value
 }
 
-/** MySQL导入 */
+/** MongoDB导入 */
 const importFormRef = ref()
 const handleImport = () => {
   importFormRef.value.open()
@@ -402,7 +427,7 @@ const handleImport = () => {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await MysqlApi.getMysqlPage(queryParams)
+    const data = await MongodbApi.getMongodbPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -434,7 +459,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await MysqlApi.deleteMysql(id)
+    await MongodbApi.deleteMongodb(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -448,8 +473,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await MysqlApi.exportMysql(queryParams)
-    download.excel(data, 'CMDB-MySQL.xls')
+    const data = await MongodbApi.exportMongodb(queryParams)
+    download.excel(data, 'CMDB-MongoDB.xls')
   } catch {
   } finally {
     exportLoading.value = false

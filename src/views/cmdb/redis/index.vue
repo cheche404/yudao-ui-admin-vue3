@@ -288,7 +288,7 @@
       <el-table-column label="实例ID" align="center" prop="instanceId" width="320px" />
       <el-table-column label="实例名称" align="center" prop="instanceName" width="190px" />
       <el-table-column label="域名" align="center" prop="host" width="420px"/>
-      <el-table-column label="域名只读" align="center" prop="hostReadonly" width="60px"/>
+      <el-table-column label="域名只读" align="center" prop="hostReadonly" width="420px"/>
       <el-table-column label="数据中心" align="center" prop="center" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
