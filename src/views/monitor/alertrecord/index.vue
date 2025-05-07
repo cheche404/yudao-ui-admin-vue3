@@ -262,19 +262,35 @@
                 :formatter="dateFormatter"
                 width="160px"
               />
-              <el-table-column label="summary" align="center" prop="summary" width="450px"/>
-              <!--          <el-table-column label="description" align="center" prop="description" />-->
-              <!--          <el-table-column label="告警类型" align="center" prop="monitorType" />-->
+              <el-table-column
+                label="持续时间"
+                align="center"
+                width="180px"
+              >
+                <template #default="scope">
+                  <span
+                    :style="{
+                      fontWeight: 'bold',
+                      color: scope.row.status === 'firing' ? 'red' : scope.row.status === 'resolved' ? 'green' : 'inherit'
+                    }"
+                  >
+                    {{ formatDuration(scope.row.alertStartTime, scope.row.alertEndTime) }}
+                  </span>
+                </template>
+              </el-table-column>
               <el-table-column v-if="type.value === 'pod'" label="命名空间" align="center" prop="namespace" />
               <el-table-column v-if="type.value === 'pod'" label="pod" align="center" prop="pod" />
-              <!--          <el-table-column label="instance" align="center" prop="instance" />-->
               <el-table-column v-if="type.value === 'mq'" label="vhost" align="center" prop="vhost" />
               <el-table-column v-if="type.value === 'mq'" label="queue" align="center" prop="queue" />
               <el-table-column v-if="type.value === 'k8s_node'" label="node" align="center" prop="node" />
+              <el-table-column v-if="type.value === 'health_check'" label="name" align="center" prop="name" />
+              <el-table-column v-if="type.value === 'health_check'" label="团队" align="center" prop="team" />
+              <el-table-column v-if="type.value === 'health_check'" label="instance" align="center" prop="instance" width="400px"/>
+              <el-table-column label="summary" align="center" prop="summary" width="450px"/>
+              <!--          <el-table-column label="description" align="center" prop="description" />-->
+              <!--          <el-table-column label="告警类型" align="center" prop="monitorType" />-->
               <!--          <el-table-column label="url" align="center" prop="url" />-->
               <!--          <el-table-column label="abi_origin_prometheus" align="center" prop="abiOriginPrometheus" />-->
-              <!--          <el-table-column label="name" align="center" prop="name" />-->
-              <!--          <el-table-column label="团队" align="center" prop="team" />-->
               <el-table-column label="操作" align="center" min-width="120px" fixed="right">
                 <template #default="scope">
                   <!--                  <el-button-->
@@ -488,9 +504,9 @@ const handleTabChange = (tabValue: string) => {
 
 /** Add/Edit operation */
 const formRef = ref()
-const openForm = (type: string, id?: number) => {
-  formRef.value.open(type, id)
-}
+// const openForm = (type: string, id?: number) => {
+//   formRef.value.open(type, id)
+// }
 
 /** Delete button operation */
 const handleDelete = async (id: number) => {
@@ -534,6 +550,41 @@ onUnmounted(() => {
     refreshInterval = null
   }
 })
+
+const formatDuration = (startTime, endTime) => {
+  // 检查输入是否有效
+  if (!startTime) {
+    return '无效时间';
+  }
+
+  const start = new Date(startTime);
+  // 验证 start 是否为有效日期
+  if (isNaN(start.getTime())) {
+    return '无效开始时间';
+  }
+
+  const end = endTime ? new Date(endTime) : new Date();
+  // 验证 end 是否为有效日期
+  if (endTime && isNaN(end.getTime())) {
+    return '无效结束时间';
+  }
+
+  // 转换为毫秒数以确保类型为 number
+  const diffMs = end.getTime() - start.getTime();
+
+  const days = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diffMs % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  const minutes = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+  const seconds = Math.floor((diffMs % (1000 * 60)) / 1000);
+
+  let result = '';
+  if (days > 0) result += `${days}天`;
+  if (hours > 0 || days > 0) result += `${hours}小时`;
+  if (minutes > 0 || hours > 0 || days > 0) result += `${minutes}分`;
+  result += `${seconds}秒`;
+
+  return result || '0秒';
+};
 </script>
 
 <style scoped>
