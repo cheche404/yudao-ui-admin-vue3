@@ -2,7 +2,7 @@
 <template>
   <div class="sso-component-dashboard">
     <iframe
-      v-if="grafanaUrl"
+      v-if="isReady"
       :src="grafanaUrl"
       frameborder="0"
       width="100%"
@@ -19,11 +19,13 @@ import { ref, onMounted } from 'vue';
 
 
 const grafanaUrl = ref('');
+const isReady = ref(false);
 
 onMounted(async () => {
   grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/login/generic_oauth'
   await new Promise(resolve => setTimeout(resolve, 500)); // 睡眠 0.5秒
   grafanaUrl.value = import.meta.env.VITE_GRAFANA_URL + '/d/fiNuFG87/zhu-ji-jian-kong?orgId=1&kiosk=full&theme=light'
+  isReady.value = true; // 标记准备好渲染
 });
 
 

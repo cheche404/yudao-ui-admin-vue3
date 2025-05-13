@@ -168,33 +168,33 @@
               <!--              class="!w-220px"-->
               <!--            />-->
               <!--          </el-form-item>-->
-              <!--          <el-form-item label="name" prop="name">-->
-              <!--            <el-input-->
-              <!--              v-model="getTabQueryParams(type.value).name"-->
-              <!--              placeholder="请输入name"-->
-              <!--              clearable-->
-              <!--              @keyup.enter="handleQuery"-->
-              <!--              class="!w-220px"-->
-              <!--            />-->
-              <!--          </el-form-item>-->
-              <!--          <el-form-item label="团队" prop="team">-->
-              <!--            <el-input-->
-              <!--              v-model="getTabQueryParams(type.value).team"-->
-              <!--              placeholder="请输入团队"-->
-              <!--              clearable-->
-              <!--              @keyup.enter="handleQuery"-->
-              <!--              class="!w-220px"-->
-              <!--            />-->
-              <!--          </el-form-item>-->
-              <!--          <el-form-item label="instance" prop="instance">-->
-              <!--            <el-input-->
-              <!--              v-model="getTabQueryParams(type.value).instance"-->
-              <!--              placeholder="请输入instance"-->
-              <!--              clearable-->
-              <!--              @keyup.enter="handleQuery"-->
-              <!--              class="!w-220px"-->
-              <!--            />-->
-              <!--          </el-form-item>-->
+              <el-form-item v-if="type.value === 'health_check'" label="name" prop="name">
+                <el-input
+                  v-model="getTabQueryParams(type.value).name"
+                  placeholder="请输入name"
+                  clearable
+                  @keyup.enter="handleQuery"
+                  class="!w-220px"
+                />
+              </el-form-item>
+              <el-form-item v-if="type.value === 'health_check'" label="团队" prop="team">
+                <el-input
+                  v-model="getTabQueryParams(type.value).team"
+                  placeholder="请输入团队"
+                  clearable
+                  @keyup.enter="handleQuery"
+                  class="!w-220px"
+                />
+              </el-form-item>
+              <el-form-item v-if="type.value === 'health_check'" label="instance" prop="instance">
+                <el-input
+                  v-model="getTabQueryParams(type.value).instance"
+                  placeholder="请输入instance"
+                  clearable
+                  @keyup.enter="handleQuery"
+                  class="!w-220px"
+                />
+              </el-form-item>
               <!--          <el-form-item label="创建时间" prop="createTime">-->
               <!--            <el-date-picker-->
               <!--              v-model="getTabQueryParams(type.value).createTime"-->
@@ -283,9 +283,13 @@
               <el-table-column v-if="type.value === 'mq'" label="vhost" align="center" prop="vhost" />
               <el-table-column v-if="type.value === 'mq'" label="queue" align="center" prop="queue" />
               <el-table-column v-if="type.value === 'k8s_node'" label="node" align="center" prop="node" />
-              <el-table-column v-if="type.value === 'health_check'" label="name" align="center" prop="name" />
-              <el-table-column v-if="type.value === 'health_check'" label="团队" align="center" prop="team" />
-              <el-table-column v-if="type.value === 'health_check'" label="instance" align="center" prop="instance" width="400px"/>
+              <el-table-column v-if="type.value === 'health_check'" label="name" align="center" prop="name" width="180px"/>
+              <el-table-column v-if="type.value === 'health_check'" label="团队" align="center" prop="team" width="180px"/>
+              <el-table-column v-if="type.value === 'health_check'" label="instance" align="center" prop="instance" width="460px">
+                <template #default="{ row }">
+                  <a :href="row.instance" target="_blank">{{ row.instance }}</a>
+                </template>
+              </el-table-column>
               <el-table-column label="summary" align="center" prop="summary" width="450px"/>
               <!--          <el-table-column label="description" align="center" prop="description" />-->
               <!--          <el-table-column label="告警类型" align="center" prop="monitorType" />-->
