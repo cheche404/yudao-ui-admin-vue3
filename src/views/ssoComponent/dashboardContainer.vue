@@ -6,7 +6,7 @@
       :src="grafanaUrl"
       frameborder="0"
       width="100%"
-      height="100%"
+      height="1200px"
       style="min-height: 800px;"
       sandbox="allow-scripts allow-same-origin allow-forms allow-popups"
     ></iframe>
