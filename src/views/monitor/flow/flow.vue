@@ -124,7 +124,7 @@ import '@vue-flow/core/dist/theme-default.css';
 const statusTypes = ['healthy', 'warning', 'error'];
 
 // Access to the Vue Flow instance
-const { onPaneReady: onPaneReadyInternal, fitView } = useVueFlow();
+const { onPaneReady: onPaneReadyInternal, fitView, getZoom } = useVueFlow();
 
 // When the flow is ready
 const onPaneReady = (instance) => {
@@ -381,7 +381,7 @@ const initializeFlow = () => {
       id: `e${edgeId++}`,
       source: db.id,
       target: storageTarget,
-      animated: false,
+      animated: true,
       label: 'Backup',
       style: { strokeDasharray: '5, 5', strokeWidth: '2.5px' }
     });
@@ -397,7 +397,7 @@ const initializeFlow = () => {
         id: `e${edgeId++}`,
         source: config.id,
         target: allServices[serviceIndex].id,
-        animated: false,
+        animated: true,
         style: { strokeDasharray: '5, 5', strokeWidth: '2.5px' }
       });
     }
@@ -433,44 +433,36 @@ const onNodeClick = (event, node) => {
   focusedNodeId.value = node.id;
 
   if (selectedHierarchyLevel.value > 0) {
-    // 如果选择了层级，以当前点击节点为起点高亮指定层级的节点
     highlightFromNode(node.id, selectedHierarchyLevel.value);
   } else {
-    // 否则递归高亮所有父节点和子节点
     highlightAllRelatedNodes(node.id);
   }
 };
 
 const highlightAllRelatedNodes = (nodeId) => {
-  // 清空之前的高亮状态
   highlightedNodes.value.clear();
   highlightedEdges.value.clear();
 
   const nodesToHighlight = new Set();
   const edgesToHighlight = new Set();
-  const visited = new Set(); // 避免无限循环
+  const visited = new Set();
 
-  // 使用队列进行广度优先搜索
   const queue = [nodeId];
   visited.add(nodeId);
 
   while (queue.length > 0) {
     const currentId = queue.shift();
 
-    // 添加当前节点到高亮集合
     nodesToHighlight.add(currentId);
 
-    // 查找当前节点的父节点和子节点
     allEdges.value.forEach(edge => {
       if (edge.target === currentId && !visited.has(edge.source)) {
-        // 父节点
         edgesToHighlight.add(edge.id);
         nodesToHighlight.add(edge.source);
         queue.push(edge.source);
         visited.add(edge.source);
       }
       if (edge.source === currentId && !visited.has(edge.target)) {
-        // 子节点
         edgesToHighlight.add(edge.id);
         nodesToHighlight.add(edge.target);
         queue.push(edge.target);
@@ -479,11 +471,9 @@ const highlightAllRelatedNodes = (nodeId) => {
     });
   }
 
-  // 更新高亮状态
   highlightedNodes.value = nodesToHighlight;
   highlightedEdges.value = edgesToHighlight;
 
-  // 更新节点和连线，添加高亮类
   nodes.value = allNodes.value.map(node => ({
     ...node,
     class: nodesToHighlight.has(node.id) ? 'highlighted' : 'faded'
@@ -493,21 +483,18 @@ const highlightAllRelatedNodes = (nodeId) => {
     ...edge,
     class: edgesToHighlight.has(edge.id) ? 'highlighted' : 'faded'
   }));
-
-  // 调整视图以包含高亮区域
-  nextTick(() => {
-    fitView({ padding: 0.1 });
-  });
 };
 
 // Handle node double click
 const onNodeDblClick = (event, node) => {
   event.stopPropagation();
+  event.preventDefault(); // Prevent default zoom-out behavior
+
   console.log('Node double-clicked:', node.id, node.data.label, node);
   selectedNode.value = {
     ...node,
     type: node.type || 'unknown',
-    position: node.position ? { ...node.position } : { x: 0, y: 0 } // 确保position存在
+    position: node.position ? { ...node.position } : { x: 0, y: 0 }
   };
   showModal.value = true;
 };
@@ -576,13 +563,10 @@ const filterNodesAndEdgesForNode = (nodeId, maxLevels) => {
 // Handle hierarchy level change
 const onHierarchyLevelChange = () => {
   if (selectedHierarchyLevel.value > 0 && focusedNodeId.value) {
-    // 如果选择了层级且有聚焦节点，以该节点为起点高亮指定层级的节点
     highlightFromNode(focusedNodeId.value, selectedHierarchyLevel.value);
   } else if (selectedHierarchyLevel.value > 0) {
-    // 如果选择了层级但没有聚焦节点，从根节点开始高亮
     highlightFromNode('ingress-1', selectedHierarchyLevel.value);
   } else {
-    // 显示所有节点和连线，并清除高亮
     nodes.value = [...allNodes.value];
     edges.value = [...allEdges.value];
     focusedNodeId.value = null;
@@ -595,7 +579,6 @@ const onHierarchyLevelChange = () => {
 };
 
 const highlightFromNode = (nodeId, levels) => {
-  // 清空之前的高亮状态
   highlightedNodes.value.clear();
   highlightedEdges.value.clear();
 
@@ -603,17 +586,14 @@ const highlightFromNode = (nodeId, levels) => {
   const edgesToHighlight = new Set();
   const visited = new Set();
 
-  // 使用队列进行广度优先搜索
   const queue = [{ id: nodeId, currentLevel: 0 }];
   visited.add(nodeId);
 
   while (queue.length > 0) {
     const { id, currentLevel } = queue.shift();
 
-    // 添加当前节点到高亮集合
     nodesToHighlight.add(id);
 
-    // 如果当前层级小于选择的层级，继续遍历
     if (currentLevel < levels) {
       allEdges.value.forEach(edge => {
         if (edge.source === id && !visited.has(edge.target)) {
@@ -631,11 +611,9 @@ const highlightFromNode = (nodeId, levels) => {
     }
   }
 
-  // 更新高亮状态
   highlightedNodes.value = nodesToHighlight;
   highlightedEdges.value = edgesToHighlight;
 
-  // 更新节点和连线，添加高亮类
   nodes.value = allNodes.value.map(node => ({
     ...node,
     class: nodesToHighlight.has(node.id) ? 'highlighted' : 'faded'
@@ -645,31 +623,22 @@ const highlightFromNode = (nodeId, levels) => {
     ...edge,
     class: edgesToHighlight.has(edge.id) ? 'highlighted' : 'faded'
   }));
-
-  // 调整视图以包含高亮区域
-  nextTick(() => {
-    fitView({ padding: 0.1 });
-  });
 };
 
 const highlightHierarchyLevel = (level) => {
-  // 清空之前的高亮状态
   highlightedNodes.value.clear();
   highlightedEdges.value.clear();
 
-  // 从根节点开始（假设ingress-1是根节点）
   const rootNodeId = 'ingress-1';
   const nodesToHighlight = new Set();
   const edgesToHighlight = new Set();
 
-  // 广度优先搜索遍历层级
   const queue = [{ id: rootNodeId, currentLevel: 0 }];
   const visited = new Set([rootNodeId]);
 
   while (queue.length > 0) {
     const { id, currentLevel } = queue.shift();
 
-    // 如果当前层级小于选择的层级，继续遍历
     if (currentLevel < level) {
       allEdges.value.forEach(edge => {
         if (edge.source === id && !visited.has(edge.target)) {
@@ -686,15 +655,12 @@ const highlightHierarchyLevel = (level) => {
       });
     }
 
-    // 添加当前节点到高亮集合
     nodesToHighlight.add(id);
   }
 
-  // 更新高亮状态
   highlightedNodes.value = nodesToHighlight;
   highlightedEdges.value = edgesToHighlight;
 
-  // 更新节点和连线，添加高亮类
   nodes.value = allNodes.value.map(node => ({
     ...node,
     class: nodesToHighlight.has(node.id) ? 'highlighted' : 'faded'
@@ -708,7 +674,6 @@ const highlightHierarchyLevel = (level) => {
 </script>
 
 <style scoped>
-/* 保持原有样式不变 */
 .custom-node {
   background: #ffffff;
   border: 1px solid #d1d5db;
@@ -886,7 +851,7 @@ const highlightHierarchyLevel = (level) => {
 :deep(.vue-flow__edge.highlighted path) {
   stroke: #3b82f6;
   stroke-width: 4px;
-  stroke-dasharray: 0; /* 高亮连线改为实线 */
+  stroke-dasharray: 0;
 }
 
 :deep(.vue-flow__edge.faded path) {
