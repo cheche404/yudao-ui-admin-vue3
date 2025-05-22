@@ -26,7 +26,7 @@
       <template #node-pod="{ id, data }">
         <div class="custom-node" :class="{ faded: isFaded(id) }" @click="onNodeClick($event, { id, data })" @dblclick="onNodeDblClick($event, { id, data })">
           <div class="node-icon">
-            <i class="fas fa-cube"></i>
+            <i class="fas fa-box-open"></i>
           </div>
           <div class="node-label">{{ data.label }}</div>
           <div class="node-status" :class="data.status"></div>
@@ -56,7 +56,7 @@
       <template #node-ingress="{ id, data }">
         <div class="custom-node" :class="{ faded: isFaded(id) }" @click="onNodeClick($event, { id, data })" @dblclick="onNodeDblClick($event, { id, data })">
           <div class="node-icon">
-            <i class="fas fa-door-open"></i>
+            <i class="fas fa-sign-in-alt"></i>
           </div>
           <div class="node-label">{{ data.label }}</div>
           <div class="node-status" :class="data.status"></div>
@@ -76,7 +76,7 @@
       <template #node-config="{ id, data }">
         <div class="custom-node" :class="{ faded: isFaded(id) }" @click="onNodeClick($event, { id, data })" @dblclick="onNodeDblClick($event, { id, data })">
           <div class="node-icon">
-            <i class="fas fa-cog"></i>
+            <i class="fas fa-cogs"></i>
           </div>
           <div class="node-label">{{ data.label }}</div>
           <div class="node-status" :class="data.status"></div>
@@ -119,18 +119,19 @@ import { Controls } from '@vue-flow/controls';
 import { MiniMap } from '@vue-flow/minimap';
 import '@vue-flow/core/dist/style.css';
 import '@vue-flow/core/dist/theme-default.css';
+import '@fortawesome/fontawesome-free/css/all.css';
 
 // Status types
 const statusTypes = ['healthy', 'warning', 'error'];
 
 // Access to the Vue Flow instance
-const { onPaneReady: onPaneReadyInternal, fitView, getZoom } = useVueFlow();
+const { onPaneReady: onPaneReadyInternal, fitView, onNodeDragStop } = useVueFlow();
 
 // When the flow is ready
 const onPaneReady = (instance) => {
   onPaneReadyInternal(instance);
   nextTick(() => {
-    fitView({ padding: 0.1 }); // 自动调整视图，包含所有节点
+    fitView({ padding: 0.1 });
   });
 };
 
@@ -413,6 +414,14 @@ onMounted(() => {
   initializeFlow();
 });
 
+// Handle node drag stop to update allNodes
+onNodeDragStop((event) => {
+  const { node } = event;
+  allNodes.value = allNodes.value.map(n =>
+    n.id === node.id ? { ...n, position: { ...node.position } } : n
+  );
+});
+
 // Reset flow to initial state
 const resetFlow = () => {
   initializeFlow();
@@ -423,7 +432,7 @@ const resetFlow = () => {
   nodes.value = [...allNodes.value];
   edges.value = [...allEdges.value];
   nextTick(() => {
-    fitView({ padding: 0.1 }); // 自动调整视图
+    fitView({ padding: 0.1 });
   });
 };
 
@@ -474,7 +483,7 @@ const highlightAllRelatedNodes = (nodeId) => {
   highlightedNodes.value = nodesToHighlight;
   highlightedEdges.value = edgesToHighlight;
 
-  nodes.value = allNodes.value.map(node => ({
+  nodes.value = nodes.value.map(node => ({
     ...node,
     class: nodesToHighlight.has(node.id) ? 'highlighted' : 'faded'
   }));
@@ -488,7 +497,7 @@ const highlightAllRelatedNodes = (nodeId) => {
 // Handle node double click
 const onNodeDblClick = (event, node) => {
   event.stopPropagation();
-  event.preventDefault(); // Prevent default zoom-out behavior
+  event.preventDefault();
 
   console.log('Node double-clicked:', node.id, node.data.label, node);
   selectedNode.value = {
@@ -551,7 +560,7 @@ const filterNodesAndEdgesForNode = (nodeId, maxLevels) => {
       }
     });
   }
-  nodes.value = allNodes.value.filter(node => relatedNodes.has(node.id));
+  nodes.value = nodes.value.filter(node => relatedNodes.has(node.id));
   edges.value = allEdges.value
     .filter(edge => relatedEdges.has(edge.id))
     .map(edge => ({
@@ -573,7 +582,7 @@ const onHierarchyLevelChange = () => {
     highlightedNodes.value.clear();
     highlightedEdges.value.clear();
     nextTick(() => {
-      fitView({ padding: 0.1 }); // 自动调整视图
+      fitView({ padding: 0.1 });
     });
   }
 };
@@ -614,7 +623,7 @@ const highlightFromNode = (nodeId, levels) => {
   highlightedNodes.value = nodesToHighlight;
   highlightedEdges.value = edgesToHighlight;
 
-  nodes.value = allNodes.value.map(node => ({
+  nodes.value = nodes.value.map(node => ({
     ...node,
     class: nodesToHighlight.has(node.id) ? 'highlighted' : 'faded'
   }));
@@ -661,7 +670,7 @@ const highlightHierarchyLevel = (level) => {
   highlightedNodes.value = nodesToHighlight;
   highlightedEdges.value = edgesToHighlight;
 
-  nodes.value = allNodes.value.map(node => ({
+  nodes.value = nodes.value.map(node => ({
     ...node,
     class: nodesToHighlight.has(node.id) ? 'highlighted' : 'faded'
   }));

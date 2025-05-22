@@ -133,6 +133,7 @@ const formRules = reactive<FormRules>({
   password: [{ required: true, message: '用户密码不能为空', trigger: 'blur' }],
   email: [
     {
+      required: true,
       type: 'email',
       message: '请输入正确的邮箱地址',
       trigger: ['blur', 'change']

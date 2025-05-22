@@ -8,7 +8,6 @@
       :inline="true"
       label-width="85px"
     >
-      <!-- 默认显示的前 8 个条件（2 行，每行 4 个） -->
       <el-form-item label="云区域" prop="cloudArea">
         <el-select
           v-model="queryParams.cloudArea"
@@ -73,17 +72,25 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="区域" prop="area">
-        <el-select v-model="queryParams.area" placeholder="请选择区域" clearable class="!w-240px">
-          <el-option
-            v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_AREA)"
-            :key="dict.value"
-            :label="dict.label"
-            :value="dict.value"
-          />
-        </el-select>
+      <el-form-item label="域名" prop="host">
+        <el-input
+          v-model="queryParams.host"
+          placeholder="请输入域名"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
       </el-form-item>
-      <el-form-item label="推广者" prop="promoter">
+      <el-form-item label="集群名称" prop="clusterName">
+        <el-input
+          v-model="queryParams.clusterName"
+          placeholder="请输入集群名称"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="推广者" prop="promoter" >
         <el-input
           v-model="queryParams.promoter"
           placeholder="请输入推广者"
@@ -92,46 +99,8 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="内网IP" prop="ipLan">
-        <el-input
-          v-model="queryParams.ipLan"
-          placeholder="请输入内网IP"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-
-      <!-- 可折叠的剩余条件 -->
-      <el-form-item label="外网IP" prop="ipWan" v-show="showMore">
-        <el-input
-          v-model="queryParams.ipWan"
-          placeholder="请输入外网IP"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="实例ID" prop="instanceId" v-show="showMore">
-        <el-input
-          v-model="queryParams.instanceId"
-          placeholder="请输入实例ID"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="实例名称" prop="instanceName" v-show="showMore">
-        <el-input
-          v-model="queryParams.instanceName"
-          placeholder="请输入实例名称"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="K8S节点" prop="k8sNode" v-show="showMore">
-        <el-select v-model="queryParams.k8sNode" placeholder="请选择" clearable class="!w-240px">
+      <el-form-item label="docker" prop="docker" v-show="showMore">
+        <el-select v-model="queryParams.docker" placeholder="请选择是否docker部署" clearable class="!w-240px">
           <el-option
             v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
             :key="dict.value"
@@ -140,8 +109,17 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="离线" prop="offline" v-show="showMore">
-        <el-select v-model="queryParams.offline" placeholder="请选择" clearable class="!w-240px">
+      <el-form-item label="主机信息" prop="nodes" v-show="showMore">
+        <el-input
+          v-model="queryParams.nodes"
+          placeholder="请输入主机信息"
+          clearable
+          @keyup.enter="handleQuery"
+          class="!w-240px"
+        />
+      </el-form-item>
+      <el-form-item label="自建" prop="location" v-show="showMore">
+        <el-select v-model="queryParams.location" placeholder="请选择是否自建" clearable class="!w-240px">
           <el-option
             v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
             :key="dict.value"
@@ -150,46 +128,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="CPU" prop="cpu" v-show="showMore">
+      <el-form-item label="备注" prop="notesInfo" v-show="showMore">
         <el-input
-          v-model="queryParams.cpu"
-          placeholder="请输入CPU核心数"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="内存大小" prop="mem" v-show="showMore">
-        <el-input
-          v-model="queryParams.mem"
-          placeholder="请输入内存大小"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="备注" prop="notes" v-show="showMore">
-        <el-input
-          v-model="queryParams.notes"
+          v-model="queryParams.notesInfo"
           placeholder="请输入备注"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="组织单位" prop="ou" v-show="showMore">
-        <el-input
-          v-model="queryParams.ou"
-          placeholder="请输入组织单位"
-          clearable
-          @keyup.enter="handleQuery"
-          class="!w-240px"
-        />
-      </el-form-item>
-      <el-form-item label="标签" prop="tags" v-show="showMore">
-        <el-input
-          v-model="queryParams.tags"
-          placeholder="请输入标签"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -198,7 +140,7 @@
       <el-form-item label="exporter-ip" prop="exporterIp" v-show="showMore">
         <el-input
           v-model="queryParams.exporterIp"
-          placeholder="请输入监控exporterIP"
+          placeholder="请输入exporter-ip"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -207,7 +149,7 @@
       <el-form-item label="exporter端口" prop="exporterPort" v-show="showMore">
         <el-input
           v-model="queryParams.exporterPort"
-          placeholder="请输入监控exporter端口"
+          placeholder="请输入exporter端口"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -234,8 +176,6 @@
           class="!w-220px"
         />
       </el-form-item>
-
-      <!-- 展开/收起按钮 -->
       <el-form-item>
         <el-button @click="toggleMore">
           <Icon :icon="showMore ? 'ep:arrow-up' : 'ep:arrow-down'" class="mr-5px" />
@@ -247,7 +187,7 @@
           type="primary"
           plain
           @click="openForm('create')"
-          v-hasPermi="['cmdb:host:create']"
+          v-hasPermi="['cmdb:mq:create']"
         >
           <Icon icon="ep:plus" class="mr-5px" /> 新增
         </el-button>
@@ -256,47 +196,21 @@
           plain
           @click="handleExport"
           :loading="exportLoading"
-          v-hasPermi="['cmdb:host:export']"
+          v-hasPermi="['cmdb:mq:export']"
         >
           <Icon icon="ep:download" class="mr-5px" /> 导出
         </el-button>
-        <el-button type="warning" plain @click="handleImport" v-hasPermi="['cmdb:host:import']">
+        <el-button type="warning" plain @click="handleImport" v-hasPermi="['cmdb:mysql:import']">
           <Icon icon="ep:upload" /> 导入
         </el-button>
       </el-form-item>
     </el-form>
   </ContentWrap>
 
-<!--  &lt;!&ndash; 导入对话框 &ndash;&gt;-->
-<!--  <el-dialog-->
-<!--    title="导入CMDB主机"-->
-<!--    v-model="importDialogVisible"-->
-<!--    width="30%"-->
-<!--    append-to-body-->
-<!--    :close-on-click-modal="false"-->
-<!--  >-->
-<!--    <el-upload-->
-<!--      ref="uploadRef"-->
-<!--      :auto-upload="false"-->
-<!--      :limit="1"-->
-<!--      accept=".xls,.xlsx"-->
-<!--      :on-change="handleFileChange"-->
-<!--    >-->
-<!--      <el-button type="primary">选择Excel文件</el-button>-->
-<!--      <template v-slot:tip>-->
-<!--        <div class="el-upload__tip">仅支持上传 .xls 或 .xlsx 格式文件</div>-->
-<!--      </template>-->
-<!--    </el-upload>-->
-<!--    <template #footer>-->
-<!--      <el-button @click="importDialogVisible = false">取消</el-button>-->
-<!--      <el-button type="primary" :loading="importLoading" @click="handleImport">导入</el-button>-->
-<!--    </template>-->
-<!--  </el-dialog>-->
-
   <!-- 列表 -->
   <ContentWrap>
     <el-table v-loading="loading" :data="list" :stripe="true" :show-overflow-tooltip="true">
-      <!--      <el-table-column label="主机ID" align="center" prop="id" />-->
+<!--      <el-table-column label="MQ实例-ID" align="center" prop="id" />-->
       <el-table-column label="云区域" align="center" prop="cloudArea" width="85px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CLOUD_AREA" :value="scope.row.cloudArea" />
@@ -307,64 +221,53 @@
           <dict-tag :type="DICT_TYPE.CMDB_ENV" :value="scope.row.env" />
         </template>
       </el-table-column>
-      <el-table-column label="实例ID" align="center" prop="instanceId" width="300px" />
-      <el-table-column label="实例名称" align="center" prop="instanceName" width="300px" />
+      <el-table-column label="域名" align="center" prop="host" width="420px"/>
+      <el-table-column label="集群名称" align="center" prop="clusterName" width="140px"/>
       <el-table-column label="数据中心" align="center" prop="center" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
         </template>
       </el-table-column>
-      <el-table-column label="团队" align="center" prop="team" width="100px">
+      <el-table-column label="团队" align="center" prop="team" width="120px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.team" />
         </template>
       </el-table-column>
       <el-table-column label="用户" align="center" prop="user" width="120px" />
-      <el-table-column label="区域" align="center" prop="area" width="100px">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CMDB_AREA" :value="scope.row.area" />
-        </template>
-      </el-table-column>
       <el-table-column label="推广者" align="center" prop="promoter" width="150px" />
-      <el-table-column label="内网IP" align="center" prop="ipLan" width="125px" />
-      <el-table-column label="外网IP" align="center" prop="ipWan" width="125px" />
-      <el-table-column label="K8S节点" align="center" prop="k8sNode" width="80px">
+      <el-table-column label="docker" align="center" prop="location" width="90px" >
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.k8sNode" />
+          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.docker" />
         </template>
       </el-table-column>
-      <el-table-column label="离线" align="center" prop="offline" width="60px">
+      <el-table-column label="主机信息" align="center" prop="nodes" width="200px"/>
+      <el-table-column label="自建" align="center" prop="location" width="90px" >
         <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.offline" />
+          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
         </template>
       </el-table-column>
-      <el-table-column label="CPU" align="center" prop="cpu" width="60px" />
-      <el-table-column label="内存" align="center" prop="mem" width="60px" />
-      <el-table-column label="exporterIP" align="center" prop="exporterIp" width="160px" />
-      <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px" />
+      <el-table-column label="exporter-ip" align="center" prop="exporterIp" width="150px"/>
+      <el-table-column label="exporter端口" align="center" prop="exporterPort" width="140px"/>
       <el-table-column label="监控" align="center" prop="monitored">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
       </el-table-column>
-      <el-table-column label="组织单位" align="center" prop="ou" width="80px" />
-      <el-table-column label="标签" align="center" prop="tags" width="300px" />
-      <el-table-column label="备注" align="center" prop="notes" width="200px" />
-      <!--      <el-table-column-->
-      <!--        label="创建时间"-->
-      <!--        align="center"-->
-      <!--        prop="createTime"-->
-      <!--        :formatter="dateFormatter"-->
-      <!--        width="180px"-->
-      <!--      />-->
-      <!-- 固定操作列 -->
+      <el-table-column label="备注" align="center" prop="notesInfo" width="300px"/>
+      <el-table-column
+        label="创建时间"
+        align="center"
+        prop="createTime"
+        :formatter="dateFormatter"
+        width="180px"
+      />
       <el-table-column label="操作" align="center" min-width="120px" fixed="right">
         <template #default="scope">
           <el-button
             link
             type="primary"
             @click="openForm('update', scope.row.id)"
-            v-hasPermi="['cmdb:host:update']"
+            v-hasPermi="['cmdb:mq:update']"
           >
             编辑
           </el-button>
@@ -372,7 +275,7 @@
             link
             type="danger"
             @click="handleDelete(scope.row.id)"
-            v-hasPermi="['cmdb:host:delete']"
+            v-hasPermi="['cmdb:mq:delete']"
           >
             删除
           </el-button>
@@ -389,32 +292,29 @@
   </ContentWrap>
 
   <!-- 表单弹窗：添加/修改 -->
-  <HostForm ref="formRef" @success="getList" />
+  <MqForm ref="formRef" @success="getList" />
 
-  <HostImportForm ref="importFormRef" @success="getList" />
+  <MqImportForm ref="importFormRef" @success="getList" />
 </template>
 
 <script setup lang="ts">
+import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
-import { HostApi, HostVO } from '@/api/cmdb/host'
-import HostForm from './HostForm.vue'
-import HostImportForm from './HostImportForm.vue'
-import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
+import { MqApi, MqVO } from '@/api/cmdb/mq'
+import MqForm from './MqForm.vue'
+import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
+import MqImportForm from "@/views/cmdb/mq/MqImportForm.vue";
 
-/** CMDB主机 列表 */
-defineOptions({ name: 'Host' })
+/** CMDB-MQ 列表 */
+defineOptions({ name: 'Mq' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
 
 const loading = ref(true) // 列表的加载中
-const list = ref<HostVO[]>([]) // 列表的数据
+const list = ref<MqVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
 const showMore = ref(false) // 控制更多搜索条件的显示/隐藏
-const importDialogVisible = ref(false) // 控制导入对话框显示
-const importLoading = ref(false) // 导入加载中
-const selectedFile = ref<File | null>(null) // 选中的文件
-const uploadRef = ref() // 上传组件引用
 const queryParams = reactive({
   pageNo: 1,
   pageSize: 10,
@@ -423,23 +323,17 @@ const queryParams = reactive({
   center: undefined,
   team: undefined,
   user: undefined,
-  area: undefined,
   promoter: undefined,
-  ipLan: undefined,
-  ipWan: undefined,
-  instanceId: undefined,
-  instanceName: undefined,
-  k8sNode: undefined,
-  offline: undefined,
-  cpu: undefined,
-  mem: undefined,
-  notes: undefined,
-  ou: undefined,
-  tags: undefined,
+  host: undefined,
+  docker: undefined,
+  nodes: undefined,
+  clusterName: undefined,
+  location: undefined,
+  notesInfo: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
   monitored: undefined,
-  createTime: []
+  createTime: [],
 })
 const queryFormRef = ref() // 搜索的表单
 const exportLoading = ref(false) // 导出的加载中
@@ -449,7 +343,7 @@ const toggleMore = () => {
   showMore.value = !showMore.value
 }
 
-/** 主机导入 */
+/** Mq导入 */
 const importFormRef = ref()
 const handleImport = () => {
   importFormRef.value.open()
@@ -459,7 +353,7 @@ const handleImport = () => {
 const getList = async () => {
   loading.value = true
   try {
-    const data = await HostApi.getHostPage(queryParams)
+    const data = await MqApi.getMqPage(queryParams)
     list.value = data.list
     total.value = data.total
   } finally {
@@ -491,7 +385,7 @@ const handleDelete = async (id: number) => {
     // 删除的二次确认
     await message.delConfirm()
     // 发起删除
-    await HostApi.deleteHost(id)
+    await MqApi.deleteMq(id)
     message.success(t('common.delSuccess'))
     // 刷新列表
     await getList()
@@ -505,8 +399,8 @@ const handleExport = async () => {
     await message.exportConfirm()
     // 发起导出
     exportLoading.value = true
-    const data = await HostApi.exportHost(queryParams)
-    download.excel(data, 'CMDB主机.xls')
+    const data = await MqApi.exportMq(queryParams)
+    download.excel(data, 'CMDB-MQ.xls')
   } catch {
   } finally {
     exportLoading.value = false

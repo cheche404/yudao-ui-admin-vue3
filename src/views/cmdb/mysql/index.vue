@@ -266,12 +266,12 @@
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
         </template>
       </el-table-column>
-      <el-table-column label="团队" align="center" prop="team" width="90px">
+      <el-table-column label="团队" align="center" prop="team" width="120px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="用户" align="center" prop="user" width="80px" />
+      <el-table-column label="用户" align="center" prop="user" width="120px" />
       <el-table-column label="推广者" align="center" prop="promoter" width="150px" />
       <el-table-column label="部署方式" align="center" prop="clusterType" width="100px">
         <template #default="scope">
@@ -290,15 +290,15 @@
         </template>
       </el-table-column>
       <el-table-column label="组织单位" align="center" prop="ou" />
-      <el-table-column label="标签" align="center" prop="tags" />
-      <el-table-column label="exporter-ip" align="center" prop="exporterIp" />
-      <el-table-column label="exporter端口" align="center" prop="exporterPort" />
+      <el-table-column label="标签" align="center" prop="tags" width="300px"/>
+      <el-table-column label="exporter-ip" align="center" prop="exporterIp" width="150px"/>
+      <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px"/>
       <el-table-column label="监控" align="center" prop="monitored">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="notes" />
+      <el-table-column label="备注" align="center" prop="notes" width="300px"/>
       <el-table-column
         label="创建时间"
         align="center"

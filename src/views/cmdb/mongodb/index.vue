@@ -289,16 +289,16 @@
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="用户" align="center" prop="user" width="80px" />
+      <el-table-column label="用户" align="center" prop="user" width="140px" />
       <el-table-column label="推广者" align="center" prop="promoter" width="150px" />
       <el-table-column label="部署方式" align="center" prop="clusterType" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE" :value="scope.row.clusterType" />
         </template>
       </el-table-column>
-      <el-table-column label="CPU(核)" align="center" prop="cpu" />
-      <el-table-column label="内存大小(GB)" align="center" prop="mem" />
-      <el-table-column label="磁盘大小(GB)" align="center" prop="storage" />
+      <el-table-column label="CPU(核)" align="center" prop="cpu" width="100px"/>
+      <el-table-column label="内存大小(GB)" align="center" prop="mem" width="100px"/>
+      <el-table-column label="磁盘大小(GB)" align="center" prop="storage" width="100px"/>
       <el-table-column label="自建" align="center" prop="location" width="90px" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
@@ -309,17 +309,17 @@
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.offline" />
         </template>
       </el-table-column>
-      <el-table-column label="组织单位" align="center" prop="ou" />
-      <el-table-column label="标签" align="center" prop="tags" />
-      <el-table-column label="主机信息" align="center" prop="nodeInfo" />
-      <el-table-column label="exporter-ip" align="center" prop="exporterIp" />
-      <el-table-column label="exporter端口" align="center" prop="exporterPort" />
+      <el-table-column label="组织单位" align="center" prop="ou" width="100px"/>
+      <el-table-column label="标签" align="center" prop="tags" width="200px"/>
+      <el-table-column label="主机信息" align="center" prop="nodeInfo" width="300px"/>
+      <el-table-column label="exporter-ip" align="center" prop="exporterIp" width="150px"/>
+      <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px"/>
       <el-table-column label="监控" align="center" prop="monitored">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="notes" />
+      <el-table-column label="备注" align="center" prop="notes" width="300px"/>
       <el-table-column
         label="创建时间"
         align="center"
