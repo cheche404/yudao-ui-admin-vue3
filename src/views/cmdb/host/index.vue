@@ -83,10 +83,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="推广者" prop="promoter">
+      <el-form-item label="负责人" prop="promoter">
         <el-input
           v-model="queryParams.promoter"
-          placeholder="请输入推广者"
+          placeholder="请输入负责人"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -325,7 +325,7 @@
           <dict-tag :type="DICT_TYPE.CMDB_AREA" :value="scope.row.area" />
         </template>
       </el-table-column>
-      <el-table-column label="推广者" align="center" prop="promoter" width="150px" />
+      <el-table-column label="负责人" align="center" prop="promoter" width="150px" />
       <el-table-column label="内网IP" align="center" prop="ipLan" width="125px" />
       <el-table-column label="外网IP" align="center" prop="ipWan" width="125px" />
       <el-table-column label="K8S节点" align="center" prop="k8sNode" width="80px">

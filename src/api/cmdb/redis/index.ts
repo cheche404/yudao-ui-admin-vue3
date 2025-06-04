@@ -8,7 +8,7 @@ export interface RedisVO {
   center: string // 数据中心
   team: string // 团队
   user: string // 用户
-  promoter: string // 推广者
+  promoter: string // 负责人
   instanceId: string // 实例ID
   instanceName: string // 实例名称
   host: string // 域名

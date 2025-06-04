@@ -96,8 +96,8 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="推广者" prop="promoter">
-            <el-input v-model="formData.promoter" placeholder="请输入推广者" />
+          <el-form-item label="负责人" prop="promoter">
+            <el-input v-model="formData.promoter" placeholder="请输入负责人" />
           </el-form-item>
         </el-col>
         <el-col :span="12">

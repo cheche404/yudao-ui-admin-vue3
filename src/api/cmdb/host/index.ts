@@ -9,7 +9,7 @@ export interface HostVO {
   team: string // 团队
   user: string // 用户
   area: string // 区域
-  promoter: string // 推广者
+  promoter: string // 负责人
   ipLan: string // 内网IP
   ipWan: string // 外网IP
   instanceId: string // 云实例ID

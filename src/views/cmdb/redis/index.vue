@@ -99,10 +99,10 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="推广者" prop="promoter" v-show="showMore">
+      <el-form-item label="负责人" prop="promoter" v-show="showMore">
         <el-input
           v-model="queryParams.promoter"
-          placeholder="请输入推广者"
+          placeholder="请输入负责人"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -300,7 +300,7 @@
         </template>
       </el-table-column>
       <el-table-column label="用户" align="center" prop="user" width="140px" />
-      <el-table-column label="推广者" align="center" prop="promoter" width="150px" />
+      <el-table-column label="负责人" align="center" prop="promoter" width="150px" />
       <el-table-column label="部署方式" align="center" prop="clusterType" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE" :value="scope.row.clusterType" />

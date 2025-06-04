@@ -8,7 +8,7 @@ export interface MqVO {
   center: string // 数据中心
   team: string // 团队
   user: string // 用户
-  promoter: string // 推广者
+  promoter: string // 负责人
   host: string // 域名
   docker: string // docker
   nodes: string // 主机信息
@@ -52,7 +52,7 @@ export const MqApi = {
     return await request.download({ url: `/cmdb/mq/export-excel`, params })
   },
 
-  // 下载Mysql导入模板
+  // 下载Mq导入模板
   importMqTemplate: () => {
     return request.download({ url: '/cmdb/mq/get-import-template' })
   },
