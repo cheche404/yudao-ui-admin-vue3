@@ -24,7 +24,7 @@ const isReady = ref(false);
 onMounted(async () => {
   grafanaUrl.value = import.meta.env.VITE_HUAWEI_GRAFANA_URL + '/login/generic_oauth'
   await new Promise(resolve => setTimeout(resolve, 500)); // 睡眠 0.5秒
-  grafanaUrl.value = import.meta.env.VITE_HUAWEI_GRAFANA_URL + '/d/fiNuFG87/zhu-ji-jian-kong?orgId=1&kiosk=full&theme=light'
+  grafanaUrl.value = import.meta.env.VITE_HUAWEI_GRAFANA_URL + '/d/rabbitmq-monitor?orgId=1&kiosk=full&theme=light'
   isReady.value = true; // 标记准备好渲染
 });
 

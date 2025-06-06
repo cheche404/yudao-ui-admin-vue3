@@ -107,8 +107,8 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="主机信息" prop="nodes">
-            <el-input v-model="formData.nodes" placeholder="请输入主机信息" />
+          <el-form-item label="主机信息" prop="nodesInfo">
+            <el-input v-model="formData.nodesInfo" placeholder="请输入主机信息" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -162,7 +162,22 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col>
+        <el-col :span="12">
+          <el-form-item label="离线" prop="offline">
+            <el-select
+              v-model="formData.offline"
+              placeholder="请选择"
+            >
+              <el-option
+                v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
+                :key="dict.value"
+                :label="dict.label"
+                :value="dict.value"
+              />
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
           <el-form-item label="备注" prop="notesInfo">
             <el-input
               v-model="formData.notesInfo"
@@ -204,8 +219,9 @@ const formData = ref({
   promoter: undefined,
   host: undefined,
   docker: undefined,
-  nodes: undefined,
+  nodesInfo: undefined,
   clusterName: undefined,
+  offline: 'N',
   location: 'N',
   notesInfo: undefined,
   exporterIp: undefined,
@@ -275,8 +291,9 @@ const resetForm = () => {
     promoter: undefined,
     host: undefined,
     docker: undefined,
-    nodes: undefined,
+    nodesInfo: undefined,
     clusterName: undefined,
+    offline: 'N',
     location: 'N',
     notesInfo: undefined,
     exporterIp: undefined,

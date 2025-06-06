@@ -99,6 +99,16 @@
           class="!w-240px"
         />
       </el-form-item>
+      <el-form-item label="离线" prop="offline" v-show="showMore">
+        <el-select v-model="queryParams.offline" placeholder="请选择" clearable class="!w-240px">
+          <el-option
+            v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_Y_N_TYPE)"
+            :key="dict.value"
+            :label="dict.label"
+            :value="dict.value"
+          />
+        </el-select>
+      </el-form-item>
       <el-form-item label="docker" prop="docker" v-show="showMore">
         <el-select v-model="queryParams.docker" placeholder="请选择是否docker部署" clearable class="!w-240px">
           <el-option
@@ -109,9 +119,9 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="主机信息" prop="nodes" v-show="showMore">
+      <el-form-item label="主机信息" prop="nodesInfo" v-show="showMore">
         <el-input
-          v-model="queryParams.nodes"
+          v-model="queryParams.nodesInfo"
           placeholder="请输入主机信息"
           clearable
           @keyup.enter="handleQuery"
@@ -240,7 +250,12 @@
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.docker" />
         </template>
       </el-table-column>
-      <el-table-column label="主机信息" align="center" prop="nodes" width="200px"/>
+      <el-table-column label="离线" align="center" prop="offline" width="60px">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.offline" />
+        </template>
+      </el-table-column>
+      <el-table-column label="主机信息" align="center" prop="nodesInfo" width="200px"/>
       <el-table-column label="自建" align="center" prop="location" width="90px" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
@@ -326,7 +341,8 @@ const queryParams = reactive({
   promoter: undefined,
   host: undefined,
   docker: undefined,
-  nodes: undefined,
+  nodesInfo: undefined,
+  offline: undefined,
   clusterName: undefined,
   location: undefined,
   notesInfo: undefined,

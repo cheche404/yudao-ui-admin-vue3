@@ -197,8 +197,8 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="主机信息" prop="nodeInfo">
-            <el-input v-model="formData.nodeInfo" placeholder="请输入主机信息" />
+          <el-form-item label="主机信息" prop="nodesInfo">
+            <el-input v-model="formData.nodesInfo" placeholder="请输入主机信息" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -283,7 +283,7 @@ const formData = ref({
   notes: undefined,
   ou: undefined,
   tags: undefined,
-  nodeInfo: undefined,
+  nodesInfo: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
   monitored: 'N',
@@ -362,7 +362,7 @@ const resetForm = () => {
     notes: undefined,
     ou: undefined,
     tags: undefined,
-    nodeInfo: undefined,
+    nodesInfo: undefined,
     exporterIp: undefined,
     exporterPort: undefined,
     monitored: 'N',

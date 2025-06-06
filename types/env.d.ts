@@ -26,7 +26,7 @@ interface ImportMetaEnv {
   readonly VITE_SOURCEMAP: string
   readonly VITE_OUT_DIR: string
   readonly VITE_GOVIEW_URL: string
-  readonly VITE_GRAFANA_URL: string
+  readonly VITE_HUAWEI_GRAFANA_URL: string
   readonly VITE_ARCHERY_URL: string
   readonly VITE_RANCHER_URL: string
   readonly VITE_JUMPSERVER_URL: string

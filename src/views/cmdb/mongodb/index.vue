@@ -183,9 +183,9 @@
           class="!w-240px"
         />
       </el-form-item>
-      <el-form-item label="主机信息" prop="nodeInfo" v-show="showMore">
+      <el-form-item label="主机信息" prop="nodesInfo" v-show="showMore">
         <el-input
-          v-model="queryParams.nodeInfo"
+          v-model="queryParams.nodesInfo"
           placeholder="请输入主机信息"
           clearable
           @keyup.enter="handleQuery"
@@ -311,7 +311,7 @@
       </el-table-column>
       <el-table-column label="组织单位" align="center" prop="ou" width="100px"/>
       <el-table-column label="标签" align="center" prop="tags" width="200px"/>
-      <el-table-column label="主机信息" align="center" prop="nodeInfo" width="300px"/>
+      <el-table-column label="主机信息" align="center" prop="nodesInfo" width="300px"/>
       <el-table-column label="exporter-ip" align="center" prop="exporterIp" width="150px"/>
       <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px"/>
       <el-table-column label="监控" align="center" prop="monitored">
@@ -403,7 +403,7 @@ const queryParams = reactive({
   offline: undefined,
   ou: undefined,
   tags: undefined,
-  nodeInfo: undefined,
+  nodesInfo: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
   monitored: undefined,
