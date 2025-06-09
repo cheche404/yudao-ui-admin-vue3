@@ -5,7 +5,7 @@ export interface RedisVO {
   id: number // Redis实例-ID
   cloudArea: string // 云区域
   env: string // 环境
-  center: string // 数据中心
+  center: string // 部门
   team: string // 团队
   user: string // 用户
   promoter: string // 负责人

@@ -33,10 +33,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据中心" prop="center">
+      <el-form-item label="部门" prop="center">
         <el-select
           v-model="formData.center"
-          placeholder="请选择数据中心"
+          placeholder="请选择部门"
         >
           <el-option
             v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_CENTER)"
@@ -102,7 +102,7 @@ const formData = ref({
 const formRules = reactive({
   cloudArea: [{ required: true, message: '云区域不能为空', trigger: 'blur' }],
   env: [{ required: true, message: '环境不能为空', trigger: 'blur' }],
-  center: [{ required: true, message: '数据中心不能为空', trigger: 'blur' }],
+  center: [{ required: true, message: '部门不能为空', trigger: 'blur' }],
   team: [{ required: true, message: '团队不能为空', trigger: 'blur' }],
   namespace: [{ required: true, message: 'namespace不能为空', trigger: 'blur' }],
 })

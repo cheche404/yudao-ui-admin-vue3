@@ -45,6 +45,10 @@ const tabsList = [
   {
     label: 'Font Awesome 5 Solid',
     name: 'fa-solid:'
+  },
+  {
+    label: 'Iconify for designers',
+    name: 'ify:'
   }
 ]
 

@@ -33,10 +33,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据中心" prop="center">
+      <el-form-item label="部门" prop="center">
         <el-select
           v-model="queryParams.center"
-          placeholder="请选择数据中心"
+          placeholder="请选择部门"
           clearable
           class="!w-240px"
         >
@@ -51,7 +51,7 @@
       <el-form-item label="团队" prop="team">
         <el-select
           v-model="queryParams.team"
-          placeholder="请选择数据中心"
+          placeholder="请选择部门"
           clearable
           class="!w-240px"
         >
@@ -63,10 +63,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="用户" prop="user">
+      <el-form-item label="使用方" prop="user">
         <el-input
           v-model="queryParams.user"
-          placeholder="请输入用户"
+          placeholder="请输入使用方"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -232,18 +232,18 @@
         </template>
       </el-table-column>
       <el-table-column label="域名" align="center" prop="host" width="420px"/>
-      <el-table-column label="集群名称" align="center" prop="clusterName" width="140px"/>
-      <el-table-column label="数据中心" align="center" prop="center" width="100px">
+      <el-table-column label="集群名称" align="center" prop="clusterName" width="200px"/>
+      <el-table-column label="部门" align="center" prop="center" width="150px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
         </template>
       </el-table-column>
-      <el-table-column label="团队" align="center" prop="team" width="120px">
+      <el-table-column label="团队" align="center" prop="team" width="150px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_TEAM" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="用户" align="center" prop="user" width="120px" />
+      <el-table-column label="使用方" align="center" prop="user" width="120px" />
       <el-table-column label="负责人" align="center" prop="promoter" width="150px" />
       <el-table-column label="docker" align="center" prop="location" width="90px" >
         <template #default="scope">
@@ -342,7 +342,7 @@ const queryParams = reactive({
   host: undefined,
   docker: undefined,
   nodesInfo: undefined,
-  offline: undefined,
+  offline: 'N',
   clusterName: undefined,
   location: undefined,
   notesInfo: undefined,

@@ -33,10 +33,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据中心" prop="center">
+      <el-form-item label="部门" prop="center">
         <el-select
           v-model="queryParams.center"
-          placeholder="请选择数据中心"
+          placeholder="请选择部门"
           clearable
           class="!w-240px"
         >
@@ -51,7 +51,7 @@
       <el-form-item label="团队" prop="team">
         <el-select
           v-model="queryParams.team"
-          placeholder="请选择数据中心"
+          placeholder="请选择团队"
           clearable
           class="!w-240px"
         >
@@ -142,12 +142,12 @@
           <dict-tag :type="DICT_TYPE.CMDB_ENV" :value="scope.row.env" />
         </template>
       </el-table-column>
-      <el-table-column label="数据中心" align="center" prop="center" width="100px">
+      <el-table-column label="部门" align="center" prop="center" width="150px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
         </template>
       </el-table-column>
-      <el-table-column label="团队" align="center" prop="team" width="120px">
+      <el-table-column label="团队" align="center" prop="team" width="150px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_TEAM" :value="scope.row.team" width="320px"/>
         </template>

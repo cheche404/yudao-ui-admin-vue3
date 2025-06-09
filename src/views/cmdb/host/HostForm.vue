@@ -42,10 +42,10 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="数据中心" prop="center">
+          <el-form-item label="部门" prop="center">
             <el-select
               v-model="formData.center"
-              placeholder="请选择数据中心"
+              placeholder="请选择部门"
             >
               <el-option
                 v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_CENTER)"
@@ -74,8 +74,8 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="用户" prop="user">
-            <el-input v-model="formData.user" placeholder="请输入用户" />
+          <el-form-item label="使用方" prop="user">
+            <el-input v-model="formData.user" placeholder="请输入使用方" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -164,8 +164,8 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="组织单位" prop="ou">
-            <el-input v-model="formData.ou" placeholder="请输入组织单位" />
+          <el-form-item label="内存" prop="mem">
+            <el-input v-model="formData.mem" placeholder="请输入内存大小（单位：GB）" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -175,11 +175,6 @@
         </el-col>
       </el-row>
       <el-row :gutter="20">
-        <el-col :span="12">
-          <el-form-item label="内存" prop="mem">
-            <el-input v-model="formData.mem" placeholder="请输入内存大小（单位：GB）" />
-          </el-form-item>
-        </el-col>
         <el-col :span="12">
           <el-form-item label="是否监控" prop="monitored">
             <el-select
@@ -195,13 +190,13 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="exporter-ip" prop="exporterIp">
             <el-input v-model="formData.exporterIp" placeholder="请输入监控exporterIP" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="exporter端口" prop="exporterPort">
             <el-input v-model="formData.exporterPort" placeholder="请输入监控exporter端口" />
@@ -259,7 +254,6 @@ const formData = ref({
   cpu: undefined,
   mem: undefined,
   notes: undefined,
-  ou: undefined,
   tags: undefined,
   exporterIp: undefined,
   exporterPort: undefined,
@@ -268,7 +262,7 @@ const formData = ref({
 const formRules = reactive({
   cloudArea: [{ required: true, message: '云区域不能为空', trigger: 'blur' }],
   env: [{ required: true, message: '环境不能为空', trigger: 'blur' }],
-  center: [{ required: true, message: '数据中心不能为空', trigger: 'blur' }],
+  center: [{ required: true, message: '部门不能为空', trigger: 'blur' }],
   team: [{ required: true, message: '团队不能为空', trigger: 'blur' }],
   instanceName: [{ required: true, message: '实例名称不能为空', trigger: 'blur' }],
 })
@@ -336,7 +330,6 @@ const resetForm = () => {
     cpu: undefined,
     mem: undefined,
     notes: undefined,
-    ou: undefined,
     tags: undefined,
     exporterIp: undefined,
     exporterPort: undefined,

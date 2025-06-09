@@ -41,10 +41,10 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="数据中心" prop="center">
+          <el-form-item label="部门" prop="center">
             <el-select
               v-model="formData.center"
-              placeholder="请选择数据中心"
+              placeholder="请选择部门"
             >
               <el-option
                 v-for="dict in getStrDictOptions(DICT_TYPE.CMDB_CENTER)"
@@ -73,8 +73,8 @@
       </el-row>
       <el-row :gutter="20">
         <el-col :span="12">
-          <el-form-item label="用户" prop="user">
-            <el-input v-model="formData.user" placeholder="请输入用户" />
+          <el-form-item label="使用方" prop="user">
+            <el-input v-model="formData.user" placeholder="请输入使用方" />
           </el-form-item>
         </el-col>
         <el-col :span="12">
@@ -168,36 +168,29 @@
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="组织单位" prop="ou">
-            <el-input v-model="formData.ou" placeholder="请输入组织单位" />
-          </el-form-item>
-        </el-col>
-      </el-row>
-      <el-row :gutter="20">
-        <el-col :span="12">
           <el-form-item label="标签" prop="tags">
             <el-input v-model="formData.tags" placeholder="请输入标签" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="主机信息" prop="nodesInfo">
             <el-input v-model="formData.nodesInfo" placeholder="请输入主机信息" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="exporter-ip" prop="exporterIp">
             <el-input v-model="formData.exporterIp" placeholder="请输入exporter-ip" />
           </el-form-item>
         </el-col>
+      </el-row>
+      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="exporter端口" prop="exporterPort">
             <el-input v-model="formData.exporterPort" placeholder="请输入exporter端口" />
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row :gutter="20">
         <el-col :span="12">
           <el-form-item label="监控" prop="monitored">
             <el-select
@@ -213,7 +206,9 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="12">
+      </el-row>
+      <el-row :gutter="20">
+        <el-col>
           <el-form-item label="备注" prop="notes">
             <el-input v-model="formData.notes" placeholder="请输入备注" />
           </el-form-item>
@@ -258,7 +253,6 @@ const formData = ref({
   location: 'N',
   notes: undefined,
   offline: 'N',
-  ou: undefined,
   tags: undefined,
   nodesInfo: undefined,
   exporterIp: undefined,
@@ -331,7 +325,6 @@ const resetForm = () => {
     location: 'N',
     notes: undefined,
     offline: 'N',
-    ou: undefined,
     tags: undefined,
     nodesInfo: undefined,
     exporterIp: undefined,

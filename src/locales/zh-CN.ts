@@ -216,7 +216,8 @@ export default {
     yield: '产量',
     dynamic: '动态',
     push: '推送',
-    follow: '关注'
+    follow: '关注',
+    resource: '资源数量'
   },
   form: {
     input: '输入框',

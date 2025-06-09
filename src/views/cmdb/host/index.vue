@@ -34,10 +34,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="数据中心" prop="center">
+      <el-form-item label="部门" prop="center">
         <el-select
           v-model="queryParams.center"
-          placeholder="请选择数据中心"
+          placeholder="请选择部门"
           clearable
           class="!w-240px"
         >
@@ -64,10 +64,10 @@
           />
         </el-select>
       </el-form-item>
-      <el-form-item label="用户" prop="user">
+      <el-form-item label="使用方" prop="user">
         <el-input
           v-model="queryParams.user"
-          placeholder="请输入用户"
+          placeholder="请输入使用方"
           clearable
           @keyup.enter="handleQuery"
           class="!w-240px"
@@ -309,7 +309,7 @@
       </el-table-column>
       <el-table-column label="实例ID" align="center" prop="instanceId" width="300px" />
       <el-table-column label="实例名称" align="center" prop="instanceName" width="300px" />
-      <el-table-column label="数据中心" align="center" prop="center" width="100px">
+      <el-table-column label="部门" align="center" prop="center" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
         </template>
@@ -319,8 +319,8 @@
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="用户" align="center" prop="user" width="120px" />
-      <el-table-column label="区域" align="center" prop="area" width="100px">
+      <el-table-column label="使用方" align="center" prop="user" width="120px" />
+      <el-table-column label="area" align="center" prop="area" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_AREA" :value="scope.row.area" />
         </template>
@@ -340,6 +340,8 @@
       </el-table-column>
       <el-table-column label="CPU" align="center" prop="cpu" width="60px" />
       <el-table-column label="内存" align="center" prop="mem" width="60px" />
+      <el-table-column label="标签" align="center" prop="tags" width="300px" />
+      <el-table-column label="备注" align="center" prop="notes" width="200px" />
       <el-table-column label="exporterIP" align="center" prop="exporterIp" width="160px" />
       <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px" />
       <el-table-column label="监控" align="center" prop="monitored">
@@ -347,9 +349,6 @@
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
       </el-table-column>
-      <el-table-column label="组织单位" align="center" prop="ou" width="80px" />
-      <el-table-column label="标签" align="center" prop="tags" width="300px" />
-      <el-table-column label="备注" align="center" prop="notes" width="200px" />
       <!--      <el-table-column-->
       <!--        label="创建时间"-->
       <!--        align="center"-->
@@ -430,11 +429,10 @@ const queryParams = reactive({
   instanceId: undefined,
   instanceName: undefined,
   k8sNode: undefined,
-  offline: undefined,
+  offline: 'N',
   cpu: undefined,
   mem: undefined,
   notes: undefined,
-  ou: undefined,
   tags: undefined,
   exporterIp: undefined,
   exporterPort: undefined,

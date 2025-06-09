@@ -5,7 +5,7 @@ export interface HostVO {
   id: number // 主机ID
   cloudArea: string // 云区域
   env: string // 环境
-  center: string // 数据中心
+  center: string // 部门
   team: string // 团队
   user: string // 用户
   area: string // 区域

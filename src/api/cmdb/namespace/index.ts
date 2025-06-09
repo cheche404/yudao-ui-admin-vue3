@@ -5,7 +5,7 @@ export interface NamespaceVO {
   id: number // namespace实例-ID
   cloudArea: string // 云区域
   env: string // 环境
-  center: string // 数据中心
+  center: string // 部门
   team: string // 团队
   namespace: string // 命名空间
   deployment: string // 控制器
