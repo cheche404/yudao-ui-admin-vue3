@@ -162,7 +162,7 @@
 <!--        :formatter="dateFormatter"-->
 <!--        width="180px"-->
 <!--      />-->
-      <el-table-column label="操作" align="center" min-width="120px" fixed="right">
+      <el-table-column label="操作" align="center" min-width="120px" fixed="right" v-if="hasUpdatePerm || hasDeletePerm">
         <template #default="scope">
           <el-button
             link
@@ -205,13 +205,14 @@ import { NamespaceApi, NamespaceVO } from '@/api/cmdb/namespace'
 import NamespaceForm from './NamespaceForm.vue'
 import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
 import NamespaceImportForm from "@/views/cmdb/namespace/NamespaceImportForm.vue";
+import {useUserStore} from "@/store/modules/user";
 
 /** CMDB-namespace 列表 */
 defineOptions({ name: 'Namespace' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
-
+const userStore = useUserStore()
 const loading = ref(true) // 列表的加载中
 const list = ref<NamespaceVO[]>([]) // 列表的数据
 // const showMore = ref(false) // 控制更多搜索条件的显示/隐藏
@@ -241,6 +242,14 @@ const importFormRef = ref()
 const handleImport = () => {
   importFormRef.value.open()
 }
+
+const hasUpdatePerm = computed(() => {
+  return userStore.permissions.has('cmdb:namespace:update');
+});
+
+const hasDeletePerm = computed(() => {
+  return userStore.permissions.has('cmdb:namespace:delete');
+});
 
 /** 查询列表 */
 const getList = async () => {

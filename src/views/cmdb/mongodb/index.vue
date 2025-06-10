@@ -267,9 +267,6 @@
           <dict-tag :type="DICT_TYPE.CMDB_ENV" :value="scope.row.env" />
         </template>
       </el-table-column>
-      <el-table-column label="实例ID" align="center" prop="instanceId" width="320px" />
-      <el-table-column label="实例名称" align="center" prop="instanceName" width="190px" />
-      <el-table-column label="域名" align="center" prop="host" width="420px"/>
       <el-table-column label="部门" align="center" prop="center" width="150px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
@@ -280,16 +277,18 @@
           <dict-tag :type="DICT_TYPE.CMDB_TEAM" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="使用方" align="center" prop="user" width="140px" />
       <el-table-column label="负责人" align="center" prop="promoter" width="150px" />
+      <el-table-column label="实例名称" align="center" prop="instanceName" width="190px" />
       <el-table-column label="部署方式" align="center" prop="clusterType" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_COMPONENT_INSTALL_TYPE" :value="scope.row.clusterType" />
         </template>
       </el-table-column>
+      <el-table-column label="域名" align="center" prop="host" width="420px"/>
       <el-table-column label="CPU(核)" align="center" prop="cpu" width="100px"/>
       <el-table-column label="内存大小(GB)" align="center" prop="mem" width="100px"/>
       <el-table-column label="磁盘大小(GB)" align="center" prop="storage" width="100px"/>
+      <el-table-column label="使用方" align="center" prop="user" width="140px" />
       <el-table-column label="自建" align="center" prop="location" width="90px" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
@@ -301,6 +300,8 @@
         </template>
       </el-table-column>
       <el-table-column label="标签" align="center" prop="tags" width="200px"/>
+      <el-table-column label="实例ID" align="center" prop="instanceId" width="320px" />
+      <el-table-column label="备注" align="center" prop="notes" width="300px"/>
       <el-table-column label="主机信息" align="center" prop="nodesInfo" width="300px"/>
       <el-table-column label="exporter-ip" align="center" prop="exporterIp" width="150px"/>
       <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px"/>
@@ -309,15 +310,14 @@
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="notes" width="300px"/>
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="操作" align="center" min-width="120px" fixed="right">
+<!--      <el-table-column-->
+<!--        label="创建时间"-->
+<!--        align="center"-->
+<!--        prop="createTime"-->
+<!--        :formatter="dateFormatter"-->
+<!--        width="180px"-->
+<!--      />-->
+      <el-table-column label="操作" align="center" min-width="120px" fixed="right" v-if="hasUpdatePerm || hasDeletePerm">
         <template #default="scope">
           <el-button
             link
@@ -360,14 +360,14 @@ import { MongodbApi, MongodbVO } from '@/api/cmdb/mongodb'
 import MongodbForm from './MongodbForm.vue'
 import MongodbImportForm from './MongodbImportForm.vue'
 import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
-
+import {useUserStore} from "@/store/modules/user";
 
 /** CMDB-MongoDB 列表 */
 defineOptions({ name: 'Mongodb' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
-
+const userStore = useUserStore()
 const loading = ref(true) // 列表的加载中
 const list = ref<MongodbVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
@@ -411,6 +411,15 @@ const importFormRef = ref()
 const handleImport = () => {
   importFormRef.value.open()
 }
+
+// 计算属性
+const hasUpdatePerm = computed(() => {
+  return userStore.permissions.has('cmdb:mongodb:update');
+});
+
+const hasDeletePerm = computed(() => {
+  return userStore.permissions.has('cmdb:mongodb:delete');
+});
 
 /** 查询列表 */
 const getList = async () => {

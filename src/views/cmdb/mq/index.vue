@@ -231,8 +231,6 @@
           <dict-tag :type="DICT_TYPE.CMDB_ENV" :value="scope.row.env" />
         </template>
       </el-table-column>
-      <el-table-column label="域名" align="center" prop="host" width="420px"/>
-      <el-table-column label="集群名称" align="center" prop="clusterName" width="200px"/>
       <el-table-column label="部门" align="center" prop="center" width="150px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
@@ -243,8 +241,10 @@
           <dict-tag :type="DICT_TYPE.CMDB_TEAM" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="使用方" align="center" prop="user" width="120px" />
       <el-table-column label="负责人" align="center" prop="promoter" width="150px" />
+      <el-table-column label="域名" align="center" prop="host" width="420px"/>
+      <el-table-column label="集群名称" align="center" prop="clusterName" width="200px"/>
+      <el-table-column label="使用方" align="center" prop="user" width="120px" />
       <el-table-column label="docker" align="center" prop="location" width="90px" >
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.docker" />
@@ -261,6 +261,7 @@
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.location" />
         </template>
       </el-table-column>
+      <el-table-column label="备注" align="center" prop="notesInfo" width="300px"/>
       <el-table-column label="exporter-ip" align="center" prop="exporterIp" width="150px"/>
       <el-table-column label="exporter端口" align="center" prop="exporterPort" width="140px"/>
       <el-table-column label="监控" align="center" prop="monitored">
@@ -268,15 +269,15 @@
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.monitored" />
         </template>
       </el-table-column>
-      <el-table-column label="备注" align="center" prop="notesInfo" width="300px"/>
-      <el-table-column
-        label="创建时间"
-        align="center"
-        prop="createTime"
-        :formatter="dateFormatter"
-        width="180px"
-      />
-      <el-table-column label="操作" align="center" min-width="120px" fixed="right">
+
+<!--      <el-table-column-->
+<!--        label="创建时间"-->
+<!--        align="center"-->
+<!--        prop="createTime"-->
+<!--        :formatter="dateFormatter"-->
+<!--        width="180px"-->
+<!--      />-->
+      <el-table-column label="操作" align="center" min-width="120px" fixed="right" v-if="hasUpdatePerm || hasDeletePerm">
         <template #default="scope">
           <el-button
             link
@@ -313,19 +314,19 @@
 </template>
 
 <script setup lang="ts">
-import { dateFormatter } from '@/utils/formatTime'
 import download from '@/utils/download'
 import { MqApi, MqVO } from '@/api/cmdb/mq'
 import MqForm from './MqForm.vue'
 import {DICT_TYPE, getStrDictOptions} from "@/utils/dict";
 import MqImportForm from "@/views/cmdb/mq/MqImportForm.vue";
+import {useUserStore} from "@/store/modules/user";
 
 /** CMDB-MQ 列表 */
 defineOptions({ name: 'Mq' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
-
+const userStore = useUserStore()
 const loading = ref(true) // 列表的加载中
 const list = ref<MqVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
@@ -358,6 +359,15 @@ const exportLoading = ref(false) // 导出的加载中
 const toggleMore = () => {
   showMore.value = !showMore.value
 }
+
+// 计算属性
+const hasUpdatePerm = computed(() => {
+  return userStore.permissions.has('cmdb:mq:update');
+});
+
+const hasDeletePerm = computed(() => {
+  return userStore.permissions.has('cmdb:mq:delete');
+});
 
 /** Mq导入 */
 const importFormRef = ref()

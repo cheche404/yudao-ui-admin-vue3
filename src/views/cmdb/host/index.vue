@@ -307,8 +307,6 @@
           <dict-tag :type="DICT_TYPE.CMDB_ENV" :value="scope.row.env" />
         </template>
       </el-table-column>
-      <el-table-column label="实例ID" align="center" prop="instanceId" width="300px" />
-      <el-table-column label="实例名称" align="center" prop="instanceName" width="300px" />
       <el-table-column label="部门" align="center" prop="center" width="100px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.center" />
@@ -319,28 +317,30 @@
           <dict-tag :type="DICT_TYPE.CMDB_CENTER" :value="scope.row.team" />
         </template>
       </el-table-column>
-      <el-table-column label="使用方" align="center" prop="user" width="120px" />
-      <el-table-column label="area" align="center" prop="area" width="100px">
-        <template #default="scope">
-          <dict-tag :type="DICT_TYPE.CMDB_AREA" :value="scope.row.area" />
-        </template>
-      </el-table-column>
       <el-table-column label="负责人" align="center" prop="promoter" width="150px" />
-      <el-table-column label="内网IP" align="center" prop="ipLan" width="125px" />
-      <el-table-column label="外网IP" align="center" prop="ipWan" width="125px" />
+      <el-table-column label="实例名称" align="center" prop="instanceName" width="300px" />
       <el-table-column label="K8S节点" align="center" prop="k8sNode" width="80px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.k8sNode" />
         </template>
       </el-table-column>
+      <el-table-column label="area" align="center" prop="area" width="100px">
+        <template #default="scope">
+          <dict-tag :type="DICT_TYPE.CMDB_AREA" :value="scope.row.area" />
+        </template>
+      </el-table-column>
+      <el-table-column label="内网IP" align="center" prop="ipLan" width="125px" />
+      <el-table-column label="外网IP" align="center" prop="ipWan" width="125px" />
+      <el-table-column label="CPU" align="center" prop="cpu" width="60px" />
+      <el-table-column label="内存" align="center" prop="mem" width="60px" />
+      <el-table-column label="使用方" align="center" prop="user" width="120px" />
       <el-table-column label="离线" align="center" prop="offline" width="60px">
         <template #default="scope">
           <dict-tag :type="DICT_TYPE.CMDB_Y_N_TYPE" :value="scope.row.offline" />
         </template>
       </el-table-column>
-      <el-table-column label="CPU" align="center" prop="cpu" width="60px" />
-      <el-table-column label="内存" align="center" prop="mem" width="60px" />
       <el-table-column label="标签" align="center" prop="tags" width="300px" />
+      <el-table-column label="实例ID" align="center" prop="instanceId" width="300px" />
       <el-table-column label="备注" align="center" prop="notes" width="200px" />
       <el-table-column label="exporterIP" align="center" prop="exporterIp" width="160px" />
       <el-table-column label="exporter端口" align="center" prop="exporterPort" width="120px" />
@@ -357,7 +357,7 @@
       <!--        width="180px"-->
       <!--      />-->
       <!-- 固定操作列 -->
-      <el-table-column label="操作" align="center" min-width="120px" fixed="right">
+      <el-table-column label="操作" align="center" min-width="120px" fixed="right" v-if="hasUpdatePerm || hasDeletePerm">
         <template #default="scope">
           <el-button
             link
@@ -399,13 +399,14 @@ import { HostApi, HostVO } from '@/api/cmdb/host'
 import HostForm from './HostForm.vue'
 import HostImportForm from './HostImportForm.vue'
 import { DICT_TYPE, getStrDictOptions } from '@/utils/dict'
+import {useUserStore} from "@/store/modules/user";
 
 /** CMDB主机 列表 */
 defineOptions({ name: 'Host' })
 
 const message = useMessage() // 消息弹窗
 const { t } = useI18n() // 国际化
-
+const userStore = useUserStore()
 const loading = ref(true) // 列表的加载中
 const list = ref<HostVO[]>([]) // 列表的数据
 const total = ref(0) // 列表的总页数
@@ -452,6 +453,15 @@ const importFormRef = ref()
 const handleImport = () => {
   importFormRef.value.open()
 }
+
+// 计算属性
+const hasUpdatePerm = computed(() => {
+  return userStore.permissions.has('cmdb:host:update');
+});
+
+const hasDeletePerm = computed(() => {
+  return userStore.permissions.has('cmdb:host:delete');
+});
 
 /** 查询列表 */
 const getList = async () => {
